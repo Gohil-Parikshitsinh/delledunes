@@ -1,3 +1,5 @@
 # Environment files (all)
 .env
 .env.*
+/client/.gitignore
+/server/.gitignore
