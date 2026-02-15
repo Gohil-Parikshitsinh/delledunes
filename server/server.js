@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import cors from 'cors';
@@ -5,8 +6,12 @@ import 'dotenv/config';
 import connectDB from './config/db.js';
 import connectCloudinary from './config/cloudinary.js';
 
+import userRouter from './routes/userRoute.js';
+
 const app = express();
 const port = process.env.PORT || 4000;
+
+dotenv.config()
 
 await connectDB()
 await connectCloudinary()
@@ -28,6 +33,8 @@ app.use(cors({
   
 
 app.get('/',(req, res)=>res.send("API is working"))
+
+app.use('/api/auth',userRouter)
 
 app.listen(port,()=>{
     console.log(`server is running on http://localhost:${port}`);  
