@@ -1,12 +1,12 @@
 import express from "express";
-import { isAuth, login, logout, register } from "../controllers/userController.js";
 import authUser from "../middlewares/userAuth.js";
+import adminAuth from "../middlewares/adminAuth.js";
+import { getAllUser, getUserById, deleteUser} from "../controllers/userController.js";
 
-const userRouter = express.Router()
+const userRouter = express.Router();
 
-userRouter.post('/register',register)
-userRouter.post('/login',login)
-userRouter.post('/logout',authUser, logout)
-userRouter.get('/me',authUser, isAuth)
+userRouter.get('/',authUser, adminAuth, getAllUser)
+userRouter.get('/:id',authUser, adminAuth, getUserById)
+userRouter.delete('/:id',authUser, adminAuth, deleteUser)
 
 export default userRouter;

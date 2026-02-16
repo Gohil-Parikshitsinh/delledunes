@@ -6,7 +6,15 @@ import 'dotenv/config';
 import connectDB from './config/db.js';
 import connectCloudinary from './config/cloudinary.js';
 
+import authRouter from "./routes/authRoute.js";
 import userRouter from './routes/userRoute.js';
+import categoryRouter from "./routes/categoryRoute.js";
+import productRouter from "./routes/productRoute.js";
+import variantRouter from "./routes/variantRoute.js";
+import addressRouter from "./routes/addressRoute.js";
+import orderRouter from "./routes/orderRoute.js";
+import paymentRouter from "./routes/paymentRoute.js";
+import adminRouter from "./routes/adminRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -34,7 +42,16 @@ app.use(cors({
 
 app.get('/',(req, res)=>res.send("API is working"))
 
-app.use('/api/auth',userRouter)
+app.use('/api/auth',authRouter)
+app.use('/api/users',userRouter)
+app.use('/api/categories',categoryRouter)
+app.use('/api/products',productRouter)
+app.use('/api/variants',variantRouter)
+app.use('/api/address',addressRouter)
+app.use('/api/orders',orderRouter)
+app.use('/api/payment', paymentRouter)
+app.use('/api/admin', adminRouter)
+
 
 app.listen(port,()=>{
     console.log(`server is running on http://localhost:${port}`);  

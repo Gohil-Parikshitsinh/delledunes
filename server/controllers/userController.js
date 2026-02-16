@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookieOptions } from "../config/cookie.js";
 
-// register user
+// --------------------------- Auth Route ---------------------------
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -78,7 +78,7 @@ export const login = async (req, res) => {
 
     return res.json({
       success: true,
-      user: { email: user.email, name: user.name },
+      user: { email: user.email, name: user.name, role: user.role },
     });
   } catch (error) {
     console.log(error.message);
@@ -88,14 +88,14 @@ export const login = async (req, res) => {
 
 export const isAuth = async (req, res) => {
   try {
-    const userId = req.userId; 
+    const userId = req.userId;
     const user = await User.findById(userId).select("-password");
     if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found"
-        });
-      }
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     return res.json({ success: true, user });
   } catch (error) {
     console.log(error.message);
@@ -111,5 +111,67 @@ export const logout = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
+  }
+};
+
+// --------------------------- User Route ---------------------------
+
+export const getAllUser = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    await user.deleteOne();
+    return res.status(200).json({
+      success: true,
+      message: "User Deleted Sucessfully"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
