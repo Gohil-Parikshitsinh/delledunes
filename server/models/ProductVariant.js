@@ -16,6 +16,7 @@ const productVariantSchema = new mongoose.Schema(
       type: String,
       enum: ["XS", "S", "M", "L", "XL", "XXL"],
       required: true,
+
     },
     stock: {
       type: Number,
@@ -25,6 +26,8 @@ const productVariantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+productVariantSchema.index({ product: 1, size: 1 }, { unique: true });
 
 const ProductVariant = mongoose.models.productVariant || mongoose.model("productVariant", productVariantSchema);
 
