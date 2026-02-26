@@ -1,17 +1,29 @@
 import slugify from "slugify";
 import Category from "../models/Category.js";
 import Product from "../models/Product.js";
+import ProductVariant from "../models/ProductVariant.js";
 
 export const getAllProduct = async (req, res) => {
   try {
     const products = await Product.find()
-      .select("name slug offerPrice basePrice images isFeatured")
+      .select("name slug offerPrice basePrice images isFeatured category")
       .populate("category", "name slug");
+
+    // Fetch all variants and group by product ID
+    const variants = await ProductVariant.find().select("product size stock skuCode");
+
+    const productsWithVariants = products.map((product) => {
+      const productObj = product.toObject();
+      productObj.variants = variants.filter(
+        (v) => v.product.toString() === product._id.toString()
+      );
+      return productObj;
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Product added successfully",
-      data: products,
+      message: "Products fetched successfully",
+      data: productsWithVariants,
     });
   } catch (error) {
     return res.status(500).json({
@@ -25,7 +37,8 @@ export const getProductBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
 
-    const product = await Product.findOne({ slug }).populate("category", "name slug");
+    const product = await Product.findOne({ slug })
+      .populate("category", "name slug");
 
     if (!product) {
       return res.status(404).json({
@@ -34,9 +47,16 @@ export const getProductBySlug = async (req, res) => {
       });
     }
 
+    // Fetch variants for this specific product
+    const variants = await ProductVariant.find({ product: product._id })
+      .select("size stock skuCode");
+
+    const productObj = product.toObject();
+    productObj.variants = variants;
+
     return res.status(200).json({
       success: true,
-      data: product,
+      data: productObj,
     });
   } catch (error) {
     return res.status(500).json({

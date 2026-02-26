@@ -528,6 +528,7 @@ const Cart = () => {
   const grandTotal = cartTotal + shippingCost;
 
   const handleQuantityChange = async (variantId, quantity) => {
+    // console.log("updating variantId:", variantId, "quantity:", quantity);
     setUpdatingId(variantId);
     try {
       await updateCartItem(variantId, quantity);

@@ -2,6 +2,8 @@ import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 import ProductVariant from "../models/ProductVariant.js";
 
+const MAX_PER_VARIANT = process.env.MAX_PER_VARIANT_PER_ORDER;
+
 const calculateTotal = (items) => {
   return items.reduce((total, item) => {
     return total + item.priceSnapshot * item.quantity;
@@ -45,6 +47,13 @@ export const addToCart = async (req, res) => {
       });
     }
 
+    if (quantity > MAX_PER_VARIANT) {
+      return res.status(400).json({
+        success: false,
+        message: `Maximum ${MAX_PER_VARIANT} units of the same size allowed per order`,
+      });
+    }
+
     const productExists = await Product.findById(product);
     if (!productExists) {
       return res.status(400).json({
@@ -68,28 +77,21 @@ export const addToCart = async (req, res) => {
       });
     }
 
-    if (variantExists.stock < quantity) {
+    // Only block if completely out of stock
+    if (variantExists.stock === 0) {
       return res.status(400).json({
         success: false,
-        message: "Insufficient stock",
+        message: "This item is out of stock",
       });
     }
 
     let cart = await Cart.findOne({ userId: req.userId });
-
     const priceSnapshot = productExists.offerPrice;
 
     if (!cart) {
       cart = await Cart.create({
         userId: req.userId,
-        items: [
-          {
-            product,
-            variant,
-            quantity,
-            priceSnapshot,
-          },
-        ],
+        items: [{ product, variant, quantity, priceSnapshot }],
         totalAmount: priceSnapshot * quantity,
       });
     } else {
@@ -98,21 +100,18 @@ export const addToCart = async (req, res) => {
       );
 
       if (existingItem) {
-        existingItem.quantity += quantity;
+        const newQuantity = existingItem.quantity + quantity;
 
-        if (variantExists.stock < existingItem.quantity) {
+        if (newQuantity > MAX_PER_VARIANT) {
           return res.status(400).json({
             success: false,
-            message: "Insufficient stock",
+            message: `Maximum ${MAX_PER_VARIANT} units of the same size allowed per order`,
           });
         }
+
+        existingItem.quantity = newQuantity;
       } else {
-        cart.items.push({
-          product,
-          variant,
-          quantity,
-          priceSnapshot,
-        });
+        cart.items.push({ product, variant, quantity, priceSnapshot });
       }
 
       cart.totalAmount = calculateTotal(cart.items);
@@ -144,6 +143,13 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
+    if (quantity > MAX_PER_VARIANT) {
+      return res.status(400).json({
+        success: false,
+        message: `Maximum ${MAX_PER_VARIANT} units of the same size allowed per order`,
+      });
+    }
+
     const cart = await Cart.findOne({ userId: req.userId });
     if (!cart) {
       return res.status(404).json({
@@ -163,16 +169,16 @@ export const updateCartItem = async (req, res) => {
       });
     }
 
-    const variant = await ProductVariant.findById(variantId);
-    if (!variant || variant.stock < quantity) {
+    const variantExists = await ProductVariant.findById(variantId);
+
+    if (!variantExists || variantExists.stock === 0) {
       return res.status(400).json({
         success: false,
-        message: "Insufficient stock",
+        message: "This item is out of stock",
       });
     }
 
     item.quantity = quantity;
-
     cart.totalAmount = calculateTotal(cart.items);
     await cart.save();
 
@@ -234,7 +240,6 @@ export const clearCart = async (req, res) => {
 
     cart.items = [];
     cart.totalAmount = 0;
-
     await cart.save();
 
     return res.status(200).json({

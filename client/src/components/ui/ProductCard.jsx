@@ -7,7 +7,6 @@ const ProductCard = ({ product }) => {
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
-  console.log("product:", product.name, "variants:", product.variants);
   const discount =
     product.basePrice &&
     product.offerPrice &&
@@ -37,8 +36,9 @@ const ProductCard = ({ product }) => {
       });
       setAdded(true);
       setTimeout(() => setAdded(false), 2000);
-    } catch {
+    } catch(err) {
       // fail silently — user can still go to product page
+      console.log("Quick add failed:", err);
     } finally {
       setAdding(false);
     }

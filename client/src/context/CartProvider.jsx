@@ -87,11 +87,17 @@ const CartProvider = ({ children, isAuthenticated }) => {
   // When user logs out: load guest cart from localStorage
   useEffect(() => {
     if (isAuthenticated) {
-      mergeGuestCart();
+      const guestItems = getGuestCart();
+
+      if (guestItems.length > 0) {
+        mergeGuestCart();
+      } else{
+        fetchCart()
+      }
     } else {
       setItems(getGuestCart());
     }
-  }, [isAuthenticated, mergeGuestCart]);
+  }, [isAuthenticated, mergeGuestCart, fetchCart]);
 
   // ── ADD TO CART ───────────────────────────────────────────────────────────
   const addToCart = async ({
