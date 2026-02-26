@@ -382,7 +382,9 @@ const RelatedProducts = ({ currentSlug, categoryId }) => {
     const fetch = async () => {
       try {
         const data = await getAllProducts();
-        const all = data.products || [];
+        console.log(data);
+        
+        const all = data.data || [];
         // Filter same category, exclude current product
         const related = all
           .filter(
@@ -602,9 +604,9 @@ const ProductDetail = () => {
       setNotFound(false);
       try {
         const data = await getProductBySlug(slug);
-        setProduct(data.product);
+        setProduct(data.data);
         // Auto-select first in-stock variant
-        const firstInStock = data.product?.variants?.find((v) => v.stock > 0);
+        const firstInStock = data.data?.variants?.find((v) => v.stock > 0);
         if (firstInStock) setSelectedVariant(firstInStock);
       } catch (err) {
         if (err?.response?.status === 404) setNotFound(true);

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProducts } from "../../api/products.js";
 import { getAllCategories } from "../../api/categories.js";
+import ProductCard from "../../components/ui/ProductCard.jsx";
 
 // ── TICKER ────────────────────────────────────────────────────────────────────
 const TICKER_ITEMS = [
@@ -161,112 +162,112 @@ const SectionHeader = ({ title, to, filter, onFilterChange, filterOptions }) => 
 
 // ── PRODUCT CARD ──────────────────────────────────────────────────────────────
 // Clothingan style — image, name, price below. Hover shows "Add to cart"
-const ProductCard = ({ product }) => {
-  const [hovered, setHovered] = useState(false);
+// const ProductCard = ({ product }) => {
+//   const [hovered, setHovered] = useState(false);
 
-  const discount =
-    product.basePrice && product.offerPrice && product.basePrice > product.offerPrice
-      ? Math.round(((product.basePrice - product.offerPrice) / product.basePrice) * 100)
-      : null;
+//   const discount =
+//     product.basePrice && product.offerPrice && product.basePrice > product.offerPrice
+//       ? Math.round(((product.basePrice - product.offerPrice) / product.basePrice) * 100)
+//       : null;
 
-  return (
-    <Link
-      to={`/product/${product.slug}`}
-      className="block group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Image container */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          aspectRatio: "3/4",
-          background: "#EDECEA",
-        }}
-      >
-        {product.images?.[0] ? (
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500"
-            style={{ transform: hovered ? "scale(1.04)" : "scale(1)" }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-[#E8E6E2]">
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "11px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "#9A9A9A",
-              }}
-            >
-              No Image
-            </span>
-          </div>
-        )}
+//   return (
+//     <Link
+//       to={`/product/${product.slug}`}
+//       className="block group"
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//     >
+//       {/* Image container */}
+//       <div
+//         className="relative overflow-hidden"
+//         style={{
+//           aspectRatio: "3/4",
+//           background: "#EDECEA",
+//         }}
+//       >
+//         {product.images?.[0] ? (
+//           <img
+//             src={product.images[0]}
+//             alt={product.name}
+//             className="w-full h-full object-cover transition-transform duration-500"
+//             style={{ transform: hovered ? "scale(1.04)" : "scale(1)" }}
+//           />
+//         ) : (
+//           <div className="w-full h-full flex items-center justify-center bg-[#E8E6E2]">
+//             <span
+//               style={{
+//                 fontFamily: "'DM Sans', sans-serif",
+//                 fontSize: "11px",
+//                 letterSpacing: "0.12em",
+//                 textTransform: "uppercase",
+//                 color: "#9A9A9A",
+//               }}
+//             >
+//               No Image
+//             </span>
+//           </div>
+//         )}
 
-        {/* Add to cart — slides up on hover */}
-        <div
-          className="absolute bottom-0 left-0 right-0 transition-transform duration-300"
-          style={{ transform: hovered ? "translateY(0)" : "translateY(100%)" }}
-        >
-          <button
-            className="w-full py-3 bg-[#1A1A1A] text-[#F5F4F0]"
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-            }}
-          >
-            Add to cart
-          </button>
-        </div>
-      </div>
+//         {/* Add to cart — slides up on hover */}
+//         <div
+//           className="absolute bottom-0 left-0 right-0 transition-transform duration-300"
+//           style={{ transform: hovered ? "translateY(0)" : "translateY(100%)" }}
+//         >
+//           <button
+//             className="w-full py-3 bg-[#1A1A1A] text-[#F5F4F0]"
+//             style={{
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "11px",
+//               fontWeight: 700,
+//               letterSpacing: "0.14em",
+//               textTransform: "uppercase",
+//             }}
+//           >
+//             Add to cart
+//           </button>
+//         </div>
+//       </div>
 
-      {/* Info below image */}
-      <div className="mt-2.5 flex items-start justify-between gap-2">
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "13px",
-            color: "#1A1A1A",
-            lineHeight: 1.4,
-          }}
-        >
-          {product.name}
-        </p>
-        <div className="flex items-center gap-2 shrink-0">
-          {discount > 0 && (
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "11px",
-                color: "#C9B99A",
-                fontWeight: 700,
-              }}
-            >
-              -{discount}%
-            </span>
-          )}
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "14px",
-              fontWeight: 600,
-              color: "#1A1A1A",
-            }}
-          >
-            ₹{product.offerPrice?.toLocaleString("en-IN")}
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-};
+//       {/* Info below image */}
+//       <div className="mt-2.5 flex items-start justify-between gap-2">
+//         <p
+//           style={{
+//             fontFamily: "'DM Sans', sans-serif",
+//             fontSize: "13px",
+//             color: "#1A1A1A",
+//             lineHeight: 1.4,
+//           }}
+//         >
+//           {product.name}
+//         </p>
+//         <div className="flex items-center gap-2 shrink-0">
+//           {discount > 0 && (
+//             <span
+//               style={{
+//                 fontFamily: "'DM Sans', sans-serif",
+//                 fontSize: "11px",
+//                 color: "#C9B99A",
+//                 fontWeight: 700,
+//               }}
+//             >
+//               -{discount}%
+//             </span>
+//           )}
+//           <span
+//             style={{
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "14px",
+//               fontWeight: 600,
+//               color: "#1A1A1A",
+//             }}
+//           >
+//             ₹{product.offerPrice?.toLocaleString("en-IN")}
+//           </span>
+//         </div>
+//       </div>
+//     </Link>
+//   );
+// };
 
 // ── SKELETON ──────────────────────────────────────────────────────────────────
 const ProductSkeleton = ({ count = 3 }) => (
@@ -489,8 +490,8 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getAllProducts();
-        setProducts(data.products || []);
+        const data = await getAllProducts();        
+        setProducts(data.data || []);
       } catch {
         setProducts([]);
       } finally {
@@ -501,7 +502,7 @@ const Home = () => {
     const fetchCategories = async () => {
       try {
         const data = await getAllCategories();
-        setCategories(data.categories || []);
+        setCategories(data.data || []);
       } catch {
         setCategories([]);
       } finally {

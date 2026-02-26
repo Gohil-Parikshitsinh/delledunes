@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getAllProducts } from "../../api/products.js";
 import { getAllCategories } from "../../api/categories.js";
+import ProductCard from "../../components/ui/ProductCard.jsx";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -88,180 +89,180 @@ const filterProducts = (products, filters, filterMode) => {
 };
 
 // ── PRODUCT CARD ──────────────────────────────────────────────────────────────
-const ProductCard = ({ product }) => {
-  const [hovered, setHovered] = useState(false);
+// const ProductCard = ({ product }) => {
+//   const [hovered, setHovered] = useState(false);
 
-  const discount =
-    product.basePrice && product.offerPrice && product.basePrice > product.offerPrice
-      ? Math.round(((product.basePrice - product.offerPrice) / product.basePrice) * 100)
-      : null;
+//   const discount =
+//     product.basePrice && product.offerPrice && product.basePrice > product.offerPrice
+//       ? Math.round(((product.basePrice - product.offerPrice) / product.basePrice) * 100)
+//       : null;
 
-  return (
-    <Link
-      to={`/product/${product.slug}`}
-      className="block group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ textDecoration: "none" }}
-    >
-      {/* Image */}
-      <div
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          aspectRatio: "3/4",
-          background: "#EDECEA",
-          marginBottom: "12px",
-        }}
-      >
-        {product.images?.[0] ? (
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              transition: "transform 0.5s ease",
-              transform: hovered ? "scale(1.05)" : "scale(1)",
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "11px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "#9A9A9A",
-              }}
-            >
-              No Image
-            </span>
-          </div>
-        )}
+//   return (
+//     <Link
+//       to={`/product/${product.slug}`}
+//       className="block group"
+//       onMouseEnter={() => setHovered(true)}
+//       onMouseLeave={() => setHovered(false)}
+//       style={{ textDecoration: "none" }}
+//     >
+//       {/* Image */}
+//       <div
+//         style={{
+//           position: "relative",
+//           overflow: "hidden",
+//           aspectRatio: "3/4",
+//           background: "#EDECEA",
+//           marginBottom: "12px",
+//         }}
+//       >
+//         {product.images?.[0] ? (
+//           <img
+//             src={product.images[0]}
+//             alt={product.name}
+//             style={{
+//               width: "100%",
+//               height: "100%",
+//               objectFit: "cover",
+//               transition: "transform 0.5s ease",
+//               transform: hovered ? "scale(1.05)" : "scale(1)",
+//             }}
+//           />
+//         ) : (
+//           <div
+//             style={{
+//               width: "100%",
+//               height: "100%",
+//               display: "flex",
+//               alignItems: "center",
+//               justifyContent: "center",
+//             }}
+//           >
+//             <span
+//               style={{
+//                 fontFamily: "'DM Sans', sans-serif",
+//                 fontSize: "11px",
+//                 letterSpacing: "0.12em",
+//                 textTransform: "uppercase",
+//                 color: "#9A9A9A",
+//               }}
+//             >
+//               No Image
+//             </span>
+//           </div>
+//         )}
 
-        {/* Discount badge */}
-        {discount > 0 && (
-          <div
-            style={{
-              position: "absolute",
-              top: "12px",
-              left: "12px",
-              background: "#C9B99A",
-              color: "#1A1A1A",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              padding: "3px 8px",
-            }}
-          >
-            -{discount}%
-          </div>
-        )}
+//         {/* Discount badge */}
+//         {discount > 0 && (
+//           <div
+//             style={{
+//               position: "absolute",
+//               top: "12px",
+//               left: "12px",
+//               background: "#C9B99A",
+//               color: "#1A1A1A",
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "10px",
+//               fontWeight: 700,
+//               letterSpacing: "0.1em",
+//               padding: "3px 8px",
+//             }}
+//           >
+//             -{discount}%
+//           </div>
+//         )}
 
-        {/* Featured badge */}
-        {product.isFeatured && (
-          <div
-            style={{
-              position: "absolute",
-              top: discount ? "36px" : "12px",
-              left: "12px",
-              background: "#1A1A1A",
-              color: "#F5F4F0",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              padding: "3px 8px",
-            }}
-          >
-            FEATURED
-          </div>
-        )}
+//         {/* Featured badge */}
+//         {product.isFeatured && (
+//           <div
+//             style={{
+//               position: "absolute",
+//               top: discount ? "36px" : "12px",
+//               left: "12px",
+//               background: "#1A1A1A",
+//               color: "#F5F4F0",
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "10px",
+//               fontWeight: 700,
+//               letterSpacing: "0.1em",
+//               padding: "3px 8px",
+//             }}
+//           >
+//             FEATURED
+//           </div>
+//         )}
 
-        {/* Add to cart hover */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            transform: hovered ? "translateY(0)" : "translateY(100%)",
-            transition: "transform 0.3s ease",
-          }}
-        >
-          <button
-            style={{
-              width: "100%",
-              padding: "12px",
-              background: "#1A1A1A",
-              color: "#F5F4F0",
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Quick Add
-          </button>
-        </div>
-      </div>
+//         {/* Add to cart hover */}
+//         <div
+//           style={{
+//             position: "absolute",
+//             bottom: 0,
+//             left: 0,
+//             right: 0,
+//             transform: hovered ? "translateY(0)" : "translateY(100%)",
+//             transition: "transform 0.3s ease",
+//           }}
+//         >
+//           <button
+//             style={{
+//               width: "100%",
+//               padding: "12px",
+//               background: "#1A1A1A",
+//               color: "#F5F4F0",
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "11px",
+//               fontWeight: 700,
+//               letterSpacing: "0.14em",
+//               textTransform: "uppercase",
+//               border: "none",
+//               cursor: "pointer",
+//             }}
+//           >
+//             Quick Add
+//           </button>
+//         </div>
+//       </div>
 
-      {/* Info */}
-      <div>
-        <p
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "13px",
-            color: "#1A1A1A",
-            marginBottom: "4px",
-            lineHeight: 1.4,
-          }}
-        >
-          {product.name}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "14px",
-              fontWeight: 600,
-              color: "#1A1A1A",
-            }}
-          >
-            ₹{product.offerPrice?.toLocaleString("en-IN")}
-          </span>
-          {discount > 0 && (
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "12px",
-                color: "#9A9A9A",
-                textDecoration: "line-through",
-              }}
-            >
-              ₹{product.basePrice?.toLocaleString("en-IN")}
-            </span>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-};
+//       {/* Info */}
+//       <div>
+//         <p
+//           style={{
+//             fontFamily: "'DM Sans', sans-serif",
+//             fontSize: "13px",
+//             color: "#1A1A1A",
+//             marginBottom: "4px",
+//             lineHeight: 1.4,
+//           }}
+//         >
+//           {product.name}
+//         </p>
+//         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//           <span
+//             style={{
+//               fontFamily: "'DM Sans', sans-serif",
+//               fontSize: "14px",
+//               fontWeight: 600,
+//               color: "#1A1A1A",
+//             }}
+//           >
+//             ₹{product.offerPrice?.toLocaleString("en-IN")}
+//           </span>
+//           {discount > 0 && (
+//             <span
+//               style={{
+//                 fontFamily: "'DM Sans', sans-serif",
+//                 fontSize: "12px",
+//                 color: "#9A9A9A",
+//                 textDecoration: "line-through",
+//               }}
+//             >
+//               ₹{product.basePrice?.toLocaleString("en-IN")}
+//             </span>
+//           )}
+//         </div>
+//       </div>
+//     </Link>
+//   );
+// };
 
 // ── SKELETON ──────────────────────────────────────────────────────────────────
 const ProductSkeleton = () => (
@@ -648,9 +649,9 @@ const Shop = () => {
         const [productsData, categoriesData] = await Promise.all([
           getAllProducts(),
           getAllCategories(),
-        ]);
-        setProducts(productsData.products || []);
-        setCategories(categoriesData.categories || []);
+        ]);        
+        setProducts(productsData.data || []);
+        setCategories(categoriesData.data || []);
       } catch {
         setProducts([]);
         setCategories([]);
