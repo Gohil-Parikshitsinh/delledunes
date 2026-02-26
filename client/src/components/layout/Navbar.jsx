@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth.js";
 import { getAllCategories } from "../../api/categories.js";
+import useCart from "../../hooks/useCart.js";
 
 const Navbar = () => {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -18,7 +19,7 @@ const Navbar = () => {
   const searchRef = useRef(null);
 
   // Cart count — replace with CartContext later
-  const cartCount = 0;
+  const { cartCount } = useCart();
 
   // ── FETCH CATEGORIES ────────────────────────────────────────────────────────
   useEffect(() => {
