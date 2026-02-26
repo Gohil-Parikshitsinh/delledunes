@@ -347,7 +347,7 @@ const Navbar = () => {
                   <div
                     style={{
                       position: "absolute",
-                      top: "calc(100% + 14px)",
+                      top: "calc(100% + 2px)",
                       right: 0,
                       background: "#F5F4F0",
                       border: "1px solid #1A1A1A",
