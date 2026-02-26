@@ -25,7 +25,7 @@ const Navbar = () => {
     const fetchCategories = async () => {
       try {
         const data = await getAllCategories();
-        setCategories(data.categories || []);
+        setCategories(data.data || []);
       } catch {
         // fail silently
       }

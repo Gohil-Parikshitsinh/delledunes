@@ -280,7 +280,7 @@ const Footer = () => {
           <p className="text-[13px] text-[#4A4A4A] tracking-[0.06em]">
             © {new Date().getFullYear()} Delle Dunes. All rights reserved.  
             <span className="flex flex-col text-yellow-700">
-            Made with ♥ by PargoTechnologies
+            All Rights Reserved. Site Designed, Developed & Maintained by <b>PargoTechnologies</b>
               </span> 
           </p>
           <div className="flex items-center gap-6">
