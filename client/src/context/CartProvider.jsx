@@ -47,7 +47,7 @@ const CartProvider = ({ children, isAuthenticated }) => {
     setLoading(true);
     try {
       const data = await getCart();
-      setItems(data.cart?.items || []);
+      setItems(data.data?.items || []);
     } catch {
       setItems([]);
     } finally {

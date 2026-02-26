@@ -382,7 +382,6 @@ const RelatedProducts = ({ currentSlug, categoryId }) => {
     const fetch = async () => {
       try {
         const data = await getAllProducts();
-        console.log(data);
         
         const all = data.data || [];
         // Filter same category, exclude current product

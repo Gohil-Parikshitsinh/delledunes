@@ -7,7 +7,7 @@ const ProductCard = ({ product }) => {
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
-
+  console.log("product:", product.name, "variants:", product.variants);
   const discount =
     product.basePrice &&
     product.offerPrice &&
