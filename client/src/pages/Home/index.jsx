@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllProducts } from "../../api/products.js";
 import { getAllCategories } from "../../api/categories.js";
 import ProductCard from "../../components/ui/ProductCard.jsx";
-
+import SectionHeader from "../../components/ui/SectionHeader.jsx";
+import EmptyState from "../../components/ui/EmptyState.jsx";
+import {ProductSkeleton } from "../../components/ui/Skeleton.jsx";
 // ── TICKER ────────────────────────────────────────────────────────────────────
 const TICKER_ITEMS = [
   "FREE SHIPPING ABOVE ₹2999",
@@ -103,62 +105,62 @@ const Hero = () => (
 );
 
 // ── SECTION HEADER — Clothingan exact style ───────────────────────────────────
-const SectionHeader = ({ title, to, filter, onFilterChange, filterOptions }) => (
-  <div
-    className="flex items-baseline justify-between mb-0 pb-2"
-    style={{ borderBottom: "2px solid #1A1A1A" }}
-  >
-    <h2
-      className="text-[#1A1A1A]"
-      style={{
-        fontFamily: "'Bebas Neue', sans-serif",
-        fontSize: "clamp(24px, 3.5vw, 44px)",
-        letterSpacing: "0.04em",
-        lineHeight: 1,
-      }}
-    >
-      {title}
-    </h2>
+// const SectionHeader = ({ title, to, filter, onFilterChange, filterOptions }) => (
+//   <div
+//     className="flex items-baseline justify-between mb-0 pb-2"
+//     style={{ borderBottom: "2px solid #1A1A1A" }}
+//   >
+//     <h2
+//       className="text-[#1A1A1A]"
+//       style={{
+//         fontFamily: "'Bebas Neue', sans-serif",
+//         fontSize: "clamp(24px, 3.5vw, 44px)",
+//         letterSpacing: "0.04em",
+//         lineHeight: 1,
+//       }}
+//     >
+//       {title}
+//     </h2>
 
-    <div className="flex items-center gap-4">
-      {/* Optional filter dropdown — used in Fashion Category */}
-      {filterOptions && (
-        <select
-          value={filter}
-          onChange={(e) => onFilterChange(e.target.value)}
-          className="text-[11px] font-semibold tracking-[0.1em] uppercase bg-transparent border border-[#D4D0C8] px-3 py-1 outline-none cursor-pointer"
-          style={{ fontFamily: "'DM Sans', sans-serif", color: "#1A1A1A" }}
-        >
-          {filterOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      )}
+//     <div className="flex items-center gap-4">
+//       {/* Optional filter dropdown — used in Fashion Category */}
+//       {filterOptions && (
+//         <select
+//           value={filter}
+//           onChange={(e) => onFilterChange(e.target.value)}
+//           className="text-[11px] font-semibold tracking-[0.1em] uppercase bg-transparent border border-[#D4D0C8] px-3 py-1 outline-none cursor-pointer"
+//           style={{ fontFamily: "'DM Sans', sans-serif", color: "#1A1A1A" }}
+//         >
+//           {filterOptions.map((opt) => (
+//             <option key={opt.value} value={opt.value}>
+//               {opt.label}
+//             </option>
+//           ))}
+//         </select>
+//       )}
 
-      {to && (
-        <Link
-          to={to}
-          className="flex items-center gap-1 hover:text-[#C9B99A] transition-colors"
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#1A1A1A",
-          }}
-        >
-          See all
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M7 17L17 7M17 7H7M17 7v10" />
-          </svg>
-        </Link>
-      )}
-    </div>
-  </div>
-);
+//       {to && (
+//         <Link
+//           to={to}
+//           className="flex items-center gap-1 hover:text-[#C9B99A] transition-colors"
+//           style={{
+//             fontFamily: "'DM Sans', sans-serif",
+//             fontSize: "11px",
+//             fontWeight: 700,
+//             letterSpacing: "0.14em",
+//             textTransform: "uppercase",
+//             color: "#1A1A1A",
+//           }}
+//         >
+//           See all
+//           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+//             <path d="M7 17L17 7M17 7H7M17 7v10" />
+//           </svg>
+//         </Link>
+//       )}
+//     </div>
+//   </div>
+// );
 
 // ── PRODUCT CARD ──────────────────────────────────────────────────────────────
 // Clothingan style — image, name, price below. Hover shows "Add to cart"
@@ -270,34 +272,34 @@ const SectionHeader = ({ title, to, filter, onFilterChange, filterOptions }) => 
 // };
 
 // ── SKELETON ──────────────────────────────────────────────────────────────────
-const ProductSkeleton = ({ count = 3 }) => (
-  <div className={`grid gap-4 sm:gap-6`} style={{ gridTemplateColumns: `repeat(${count}, 1fr)` }}>
-    {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className="animate-pulse">
-        <div className="bg-[#E0DED8]" style={{ aspectRatio: "3/4" }} />
-        <div className="mt-3 bg-[#E0DED8] h-3 w-3/4" />
-        <div className="mt-2 bg-[#E0DED8] h-3 w-1/3" />
-      </div>
-    ))}
-  </div>
-);
+// const ProductSkeleton = ({ count = 3 }) => (
+//   <div className={`grid gap-4 sm:gap-6`} style={{ gridTemplateColumns: `repeat(${count}, 1fr)` }}>
+//     {Array.from({ length: count }).map((_, i) => (
+//       <div key={i} className="animate-pulse">
+//         <div className="bg-[#E0DED8]" style={{ aspectRatio: "3/4" }} />
+//         <div className="mt-3 bg-[#E0DED8] h-3 w-3/4" />
+//         <div className="mt-2 bg-[#E0DED8] h-3 w-1/3" />
+//       </div>
+//     ))}
+//   </div>
+// );
 
-// ── EMPTY STATE ───────────────────────────────────────────────────────────────
-const Empty = ({ message = "Products coming soon." }) => (
-  <div className="py-20 text-center">
-    <p
-      style={{
-        fontFamily: "'DM Sans', sans-serif",
-        fontSize: "12px",
-        letterSpacing: "0.12em",
-        textTransform: "uppercase",
-        color: "#9A9A9A",
-      }}
-    >
-      {message}
-    </p>
-  </div>
-);
+// ── EmptyState STATE ───────────────────────────────────────────────────────────────
+// const EmptyState = ({ message = "Products coming soon." }) => (
+//   <div className="py-20 text-center">
+//     <p
+//       style={{
+//         fontFamily: "'DM Sans', sans-serif",
+//         fontSize: "12px",
+//         letterSpacing: "0.12em",
+//         textTransform: "uppercase",
+//         color: "#9A9A9A",
+//       }}
+//     >
+//       {message}
+//     </p>
+//   </div>
+// );
 
 // ── BEST SELLERS ──────────────────────────────────────────────────────────────
 const BestSellers = ({ products, loading }) => (
@@ -307,7 +309,7 @@ const BestSellers = ({ products, loading }) => (
       {loading ? (
         <ProductSkeleton count={3} />
       ) : products.length === 0 ? (
-        <Empty />
+        <EmptyState />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {products.slice(0, 3).map((p) => (
@@ -328,7 +330,7 @@ const LatestArrivals = ({ products, loading }) => (
       {loading ? (
         <ProductSkeleton count={2} />
       ) : products.length === 0 ? (
-        <Empty />
+        <EmptyState />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:gap-8">
           {products.slice(0, 2).map((p) => (
@@ -409,7 +411,7 @@ const FashionCategories = ({ categories, loading }) => {
             ))}
           </div>
         ) : categories.length === 0 ? (
-          <Empty message="Categories coming soon." />
+          <EmptyState message="Categories coming soon." />
         ) : (
           // Clothingan uses a 2-column grid where items alternate sizes
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">

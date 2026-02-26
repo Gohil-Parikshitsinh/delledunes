@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { getAllProducts } from "../../api/products.js";
 import { getAllCategories } from "../../api/categories.js";
 import ProductCard from "../../components/ui/ProductCard.jsx";
+import { ProductSkeleton } from "../../components/ui/Skeleton.jsx";
 
 // ── CONSTANTS ─────────────────────────────────────────────────────────────────
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -265,25 +266,25 @@ const filterProducts = (products, filters, filterMode) => {
 // };
 
 // ── SKELETON ──────────────────────────────────────────────────────────────────
-const ProductSkeleton = () => (
-  <div style={{ animation: "pulse 1.5s ease-in-out infinite" }}>
-    <div
-      style={{
-        aspectRatio: "3/4",
-        background: "#E8E6E2",
-        marginBottom: "12px",
-      }}
-    />
-    <div style={{ background: "#E8E6E2", height: "12px", width: "75%", marginBottom: "8px" }} />
-    <div style={{ background: "#E8E6E2", height: "12px", width: "35%" }} />
-    <style>{`
-      @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
-      }
-    `}</style>
-  </div>
-);
+// const ProductSkeleton = () => (
+//   <div style={{ animation: "pulse 1.5s ease-in-out infinite" }}>
+//     <div
+//       style={{
+//         aspectRatio: "3/4",
+//         background: "#E8E6E2",
+//         marginBottom: "12px",
+//       }}
+//     />
+//     <div style={{ background: "#E8E6E2", height: "12px", width: "75%", marginBottom: "8px" }} />
+//     <div style={{ background: "#E8E6E2", height: "12px", width: "35%" }} />
+//     <style>{`
+//       @keyframes pulse {
+//         0%, 100% { opacity: 1; }
+//         50% { opacity: 0.5; }
+//       }
+//     `}</style>
+//   </div>
+// );
 
 // ── FILTER CHECKBOX ───────────────────────────────────────────────────────────
 const FilterCheckbox = ({ label, checked, onChange }) => (

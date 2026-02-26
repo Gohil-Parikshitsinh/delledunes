@@ -4,6 +4,8 @@ import { getProductBySlug } from "../../api/products.js";
 import { getAllProducts } from "../../api/products.js";
 import useCart from "../../hooks/useCart.js";
 import useAuth from "../../hooks/useAuth.js";
+import Accordion from "../../components/ui/Accordion.jsx";
+import QuantitySelector from "../../components/ui/QuantitySelector.jsx";
 
 // ── IMAGE GALLERY ─────────────────────────────────────────────────────────────
 const ImageGallery = ({ images, name }) => {
@@ -216,162 +218,164 @@ const SizeSelector = ({ variants, selectedVariant, onSelect }) => {
 };
 
 // ── QUANTITY SELECTOR ─────────────────────────────────────────────────────────
-const QuantitySelector = ({ quantity, onchange, max }) => (
-  <div>
-    <p
-      style={{
-        fontFamily: "'DM Sans', sans-serif",
-        fontSize: "12px",
-        fontWeight: 700,
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        color: "#1A1A1A",
-        marginBottom: "10px",
-      }}
-    >
-      Quantity
-    </p>
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        border: "1.5px solid #E0DED8",
-      }}
-    >
-      <button
-        onClick={() => onchange(Math.max(1, quantity - 1))}
-        style={{
-          width: "40px",
-          height: "40px",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "18px",
-          color: "#1A1A1A",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        −
-      </button>
-      <span
-        style={{
-          width: "44px",
-          textAlign: "center",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "14px",
-          fontWeight: 600,
-          color: "#1A1A1A",
-          borderLeft: "1.5px solid #E0DED8",
-          borderRight: "1.5px solid #E0DED8",
-          lineHeight: "40px",
-        }}
-      >
-        {quantity}
-      </span>
-      <button
-        onClick={() => onchange(Math.min(max, quantity + 1))}
-        style={{
-          width: "40px",
-          height: "40px",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "18px",
-          color: "#1A1A1A",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        +
-      </button>
-    </div>
-    {max <= 5 && max > 0 && (
-      <p
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "11px",
-          color: "#C9B99A",
-          marginTop: "6px",
-          fontWeight: 600,
-        }}
-      >
-        Only {max} left in stock
-      </p>
-    )}
-  </div>
-);
+// const QuantitySelector = ({ quantity, onchange, max }) => (
+//   <div>
+//     <p
+//       style={{
+//         fontFamily: "'DM Sans', sans-serif",
+//         fontSize: "12px",
+//         fontWeight: 700,
+//         letterSpacing: "0.14em",
+//         textTransform: "uppercase",
+//         color: "#1A1A1A",
+//         marginBottom: "10px",
+//       }}
+//     >
+//       Quantity
+//     </p>
+//     <div
+//       style={{
+//         display: "inline-flex",
+//         alignItems: "center",
+//         border: "1.5px solid #E0DED8",
+//       }}
+//     >
+//       <button
+//         onClick={() => onchange(Math.max(1, quantity - 1))}
+//         style={{
+//           width: "40px",
+//           height: "40px",
+//           background: "none",
+//           border: "none",
+//           cursor: "pointer",
+//           fontFamily: "'DM Sans', sans-serif",
+//           fontSize: "18px",
+//           color: "#1A1A1A",
+//           display: "flex",
+//           alignItems: "center",
+//           justifyContent: "center",
+//         }}
+//       >
+//         −
+//       </button>
+//       <span
+//         style={{
+//           width: "44px",
+//           textAlign: "center",
+//           fontFamily: "'DM Sans', sans-serif",
+//           fontSize: "14px",
+//           fontWeight: 600,
+//           color: "#1A1A1A",
+//           borderLeft: "1.5px solid #E0DED8",
+//           borderRight: "1.5px solid #E0DED8",
+//           lineHeight: "40px",
+//         }}
+//       >
+//         {quantity}
+//       </span>
+//       <button
+//         onClick={() => onchange(Math.min(max, quantity + 1))}
+//         style={{
+//           width: "40px",
+//           height: "40px",
+//           background: "none",
+//           border: "none",
+//           cursor: "pointer",
+//           fontFamily: "'DM Sans', sans-serif",
+//           fontSize: "18px",
+//           color: "#1A1A1A",
+//           display: "flex",
+//           alignItems: "center",
+//           justifyContent: "center",
+//         }}
+//       >
+//         +
+//       </button>
+//     </div>
+//     {max <= 5 && max > 0 && (
+//       <p
+//         style={{
+//           fontFamily: "'DM Sans', sans-serif",
+//           fontSize: "11px",
+//           color: "#C9B99A",
+//           marginTop: "6px",
+//           fontWeight: 600,
+//         }}
+//       >
+//         Only {max} left in stock
+//       </p>
+//     )}
+//   </div>
+// );
 
 // ── ACCORDION ─────────────────────────────────────────────────────────────────
-const Accordion = ({ title, children, defaultOpen = false }) => {
-  const [open, setOpen] = useState(defaultOpen);
+// const Accordion = ({ title, children, defaultOpen = false }) => {
+//   const [open, setOpen] = useState(defaultOpen);
 
-  return (
-    <div style={{ borderTop: "1px solid #E0DED8" }}>
-      <button
-        onClick={() => setOpen((p) => !p)}
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "16px 0",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "12px",
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#1A1A1A",
-          }}
-        >
-          {title}
-        </span>
-        <svg
-          width="14"
-          height="14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          style={{
-            flexShrink: 0,
-            transition: "transform 0.2s",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            color: "#6B6B6B",
-          }}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+//   return (
+//     <div style={{ borderTop: "1px solid #E0DED8" }}>
+//       <button
+//         onClick={() => setOpen((p) => !p)}
+//         style={{
+//           width: "100%",
+//           display: "flex",
+//           alignItems: "center",
+//           justifyContent: "space-between",
+//           padding: "16px 0",
+//           background: "none",
+//           border: "none",
+//           cursor: "pointer",
+//           textAlign: "left",
+//         }}
+//       >
+//         <span
+//           style={{
+//             fontFamily: "'DM Sans', sans-serif",
+//             fontSize: "12px",
+//             fontWeight: 700,
+//             letterSpacing: "0.14em",
+//             textTransform: "uppercase",
+//             color: "#1A1A1A",
+//           }}
+//         >
+//           {title}
+//         </span>
+//         <svg
+//           width="14"
+//           height="14"
+//           fill="none"
+//           stroke="currentColor"
+//           strokeWidth="2"
+//           viewBox="0 0 24 24"
+//           style={{
+//             flexShrink: 0,
+//             transition: "transform 0.2s",
+//             transform: open ? "rotate(180deg)" : "rotate(0deg)",
+//             color: "#6B6B6B",
+//           }}
+//         >
+//           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+//         </svg>
+//       </button>
 
-      {open && (
-        <div
-          style={{
-            paddingBottom: "16px",
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: "14px",
-            color: "#6B6B6B",
-            lineHeight: 1.7,
-          }}
-        >
-          {children}
-        </div>
-      )}
-    </div>
-  );
-};
+//       {open && (
+//         <div
+//           style={{
+//             paddingBottom: "16px",
+//             fontFamily: "'DM Sans', sans-serif",
+//             fontSize: "14px",
+//             color: "#6B6B6B",
+//             lineHeight: 1.7,
+//           }}
+//         >
+//           {children}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
 
 // ── RELATED PRODUCTS ──────────────────────────────────────────────────────────
 const RelatedProducts = ({ currentSlug, categoryId }) => {
