@@ -115,7 +115,6 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const data = await getDashboardStats();
-        console.log(data);
         
         setStats(data.data);
       } catch {

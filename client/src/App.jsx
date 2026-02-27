@@ -18,7 +18,7 @@ import Dashboard from "./pages/Admin/Dashboard/index.jsx";
 import AdminProducts from "./pages/Admin/Products/index.jsx";
 import AdminOrders from "./pages/Admin/Orders/index.jsx";
 import Inventory from "./pages/Admin/Inventory/index.jsx";
-import Customers from "./pages/Admin/Customers/index.jsx";
+import AdminCustomers from "./pages/Admin/Customers/index.jsx";
 import Reports from "./pages/Admin/Reports/index.jsx";
 import CreateProduct from "./pages/Admin/Products/Create.jsx";
 import EditProduct from "./pages/Admin/Products/Edit.jsx";
@@ -51,7 +51,7 @@ const App = () => {
           <Route path="products/edit/:id" element={<EditProduct />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="inventory" element={<Inventory />} />
-          <Route path="customers" element={<Customers />} />
+          <Route path="customers" element={<AdminCustomers />} />
           <Route path="reports" element={<Reports />} />
         </Route>
       </Route>

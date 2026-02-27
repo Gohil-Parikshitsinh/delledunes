@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { cookieOptions } from "../config/cookie.js";
+import Order from "../models/Orders.js";
 
 // --------------------------- Auth Route ---------------------------
 export const register = async (req, res) => {
@@ -141,9 +142,15 @@ export const getUserById = async (req, res) => {
       });
     }
 
+    const orders = await Order.find({ user: req.params.id })
+      .populate("items.product", "name images")
+      .populate("items.variant", "size")
+      .sort({ createdAt: -1 });
+
     return res.status(200).json({
       success: true,
       user,
+      orders,
     });
   } catch (error) {
     return res.status(500).json({
