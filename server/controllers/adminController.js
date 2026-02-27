@@ -31,12 +31,15 @@ export const getDashboardStats = async (req, res) => {
       (o) => o.orderStatus === "processing"
     ).length;
     const pendingOrders = orders.filter(
-      (o) => o.orderStatus === "pending"
+      (o) => o.orderStatus === "shipped"
     ).length;
     const cancelOrders = orders.filter(
       (o) => o.orderStatus === "cancelled"
     ).length;
-
+    const deliveredOrders = orders.filter(
+      (o) => o.orderStatus === "delivered"
+    ).length;
+       
     res.json({
       success: true,
       data: {
@@ -46,6 +49,7 @@ export const getDashboardStats = async (req, res) => {
         newOrders,
         pendingOrders,
         cancelOrders,
+        deliveredOrders
       },
     });
   } catch (error) {

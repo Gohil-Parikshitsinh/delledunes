@@ -115,6 +115,8 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const data = await getDashboardStats();
+        console.log(data);
+        
         setStats(data.data);
       } catch {
         setStats(null);
@@ -186,20 +188,25 @@ const Dashboard = () => {
           loading={statsLoading}
         />
         <StatCard
-          label="Total Sales"
-          value={stats?.totalSales ?? 0}
-          loading={statsLoading}
-        />
-        <StatCard
           label="Total Profit"
           value={stats?.totalProfit ?? 0}
           prefix="₹"
+          loading={statsLoading}
+        />
+        <StatCard
+          label="Total Sales"
+          value={stats?.totalSales ?? 0}
           loading={statsLoading}
         />
       </div>
 
       {/* ── STAT CARDS ROW 2 — New, Pending, Cancelled ──────────────────────── */}
       <div className="stat-grid-3">
+        {/* <StatCard
+          label="Delivered Orders"
+          value={stats?.deliveredOrders ?? 0}
+          loading={statsLoading}
+        /> */}
         <StatCard
           label="New Orders"
           value={stats?.newOrders ?? 0}
