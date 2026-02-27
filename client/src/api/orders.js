@@ -25,14 +25,14 @@ export const getOrderById = async (id) => {
 
 // GET /api/orders
 export const getAllOrders = async () => {
-  const response = await axiosInstance.get("/api/orders");
+  const response = await axiosInstance.get("/api/orders/all");
   return response.data;
 };
 
 // PUT /api/orders/:id/status
-export const updateOrderStatus = async (id, { orderStatus }) => {
+export const updateOrderStatus = async (id,status) => {
   const response = await axiosInstance.put(`/api/orders/${id}/status`, {
-    orderStatus,
+    status,
   });
   return response.data;
 };

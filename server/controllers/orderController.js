@@ -104,7 +104,7 @@ export const createOrder = async (req, res) => {
 export const getOrdersByUser = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.userId })
-      .populate("items.product", "name slug images")
+      .populate("items.product", "name images")
       .populate("items.variant", "size skuCode")
       .populate("shippingAddress")
       .sort({ createdAt: -1 });
@@ -123,7 +123,9 @@ export const getOrdersByUser = async (req, res) => {
 
 export const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
+    const {id} = req.params;
+    const order = await Order.findById(id)
+      .populate("user", "name email")
       .populate("items.product", "name slug images")
       .populate("items.variant", "size skuCode")
       .populate("shippingAddress");
@@ -159,10 +161,11 @@ export const getAllOrders = async (req, res) => {
     const orders = await Order.find()
       .populate("user", "name email")
       .populate("items.product", "name")
+      .populate("items.variant", "size skuCode")
       .sort({ createdAt: -1 });
-
     return res.status(200).json({
       success: true,
+      count: orders.length,
       data: orders,
     });
   } catch (error) {
@@ -175,7 +178,7 @@ export const getAllOrders = async (req, res) => {
 
 export const updateOrderStatus = async (req, res) => {
   try {
-    const { orderStatus, paymentStatus } = req.body;
+    const { status,orderStatus, paymentStatus } = req.body;
 
     const order = await Order.findById(req.params.id);
 
@@ -186,6 +189,7 @@ export const updateOrderStatus = async (req, res) => {
       });
     }
 
+    if (status) order.orderStatus = status;
     if (orderStatus) order.orderStatus = orderStatus;
     if (paymentStatus) order.paymentStatus = paymentStatus;
 
