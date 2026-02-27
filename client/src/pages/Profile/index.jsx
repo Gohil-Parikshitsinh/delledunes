@@ -252,6 +252,32 @@ const ProfilePage = () => {
               My Orders
             </button>
             <button
+              onClick={() => navigate("/addresses")}
+              style={{
+                padding: "8px 16px",
+                background: "none",
+                border: "1px solid #E0DED8",
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#1A1A1A",
+                cursor: "pointer",
+                transition: "all 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#1A1A1A";
+                e.currentTarget.style.color = "#F5F4F0";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "none";
+                e.currentTarget.style.color = "#1A1A1A";
+              }}
+            >
+              Addresses
+            </button>
+            <button
               onClick={handleLogout}
               style={{
                 padding: "8px 16px",

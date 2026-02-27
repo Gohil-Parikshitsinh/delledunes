@@ -13,6 +13,7 @@ import Orders from "./pages/Orders/index.jsx";
 import Login from "./pages/Auth/Login.jsx";
 import Register from "./pages/Auth/Register.jsx";
 import ProfilePage from "./pages/Profile/index.jsx";
+import AddressesPage from "./pages/Addresses/index.jsx";
 
 // Admin pages
 import Dashboard from "./pages/Admin/Dashboard/index.jsx";
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/addresses" element={<AddressesPage />} />
         </Route>
       </Route>
 
