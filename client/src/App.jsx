@@ -12,14 +12,13 @@ import Checkout from "./pages/Checkout/index.jsx";
 import Orders from "./pages/Orders/index.jsx";
 import Login from "./pages/Auth/Login.jsx";
 import Register from "./pages/Auth/Register.jsx";
+import ProfilePage from "./pages/Profile/index.jsx";
 
 // Admin pages
 import Dashboard from "./pages/Admin/Dashboard/index.jsx";
 import AdminProducts from "./pages/Admin/Products/index.jsx";
 import AdminOrders from "./pages/Admin/Orders/index.jsx";
-import Inventory from "./pages/Admin/Inventory/index.jsx";
 import AdminCustomers from "./pages/Admin/Customers/index.jsx";
-import Reports from "./pages/Admin/Reports/index.jsx";
 import CreateProduct from "./pages/Admin/Products/Create.jsx";
 import EditProduct from "./pages/Admin/Products/Edit.jsx";
 import AdminCategories from "./pages/Admin/Categories/index.jsx";
@@ -39,6 +38,7 @@ const App = () => {
 
         {/* ── PROTECTED USER ROUTES ─────────────────────────── */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />

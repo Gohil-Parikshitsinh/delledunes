@@ -378,6 +378,24 @@ const Navbar = () => {
                       </Link>
                     )}
                     <Link
+                      to="/profile"
+                      style={{
+                        ...navLink,
+                        display: "block",
+                        padding: "11px 16px",
+                        borderBottom: "1px solid #E8E6E2",
+                        fontSize: "12px",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "#C9B99A")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "#1A1A1A")
+                      }
+                    >
+                      Profile
+                    </Link>
+                    <Link
                       to="/orders"
                       style={{
                         ...navLink,
