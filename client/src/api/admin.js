@@ -7,6 +7,11 @@ export const getDashboardStats = async () => {
   const response = await axiosInstance.get("/api/admin/dashboard");
   return response.data;
 };
+// Add this to src/api/admin.js
+export const getDashboardChartData = async () => {
+  const response = await axiosInstance.get("/api/admin/dashboard/chart");
+  return response.data;
+};
 
 // ── INVENTORY ─────────────────────────────────────────────────────────────────
 
@@ -117,10 +122,9 @@ export const getAllVariants = async () => {
 };
 
 // POST /api/variants
-export const createVariant = async ({ productId, skuCode, size, stock }) => {
+export const createVariant = async ({ product, size, stock }) => {
   const response = await axiosInstance.post("/api/variants", {
-    productId,
-    skuCode,
+    product,
     size,
     stock,
   });
@@ -147,29 +151,25 @@ export const deleteVariant = async (id) => {
 
 // GET /api/products/view
 export const getAllProductsAdmin = async () => {
-  const response = await axiosInstance.get("/api/products/view");
+  const response = await axiosInstance.get("/api/products/view");  
   return response.data;
 };
 
 // GET /api/products/view/:slug
-export const getProductBySlugAdmin = async (slug) => {
-  const response = await axiosInstance.get(`/api/products/view/${slug}`);
+export const getProductByIdAdmin = async (id) => {
+  const response = await axiosInstance.get(`/api/products/view/${id}`);
   return response.data;
 };
 
 // POST /api/products
-export const createProduct = async (formData) => {
-  const response = await axiosInstance.post("/api/products", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+export const createProduct = async (data) => {
+  const response = await axiosInstance.post("/api/products", data);
   return response.data;
 };
 
 // PUT /api/products/:id
-export const updateProduct = async (id, formData) => {
-  const response = await axiosInstance.put(`/api/products/${id}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+export const updateProduct = async (id, data) => {
+  const response = await axiosInstance.put(`/api/products/${id}`, data);
   return response.data;
 };
 

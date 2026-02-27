@@ -8,6 +8,6 @@ export const getAllProducts = async (params = {}) => {
 
 // GET /api/products/:slug
 export const getProductBySlug = async (slug) => {
-  const response = await axiosInstance.get(`/api/products/${slug}`);
+  const response = await axiosInstance.get(`/api/products/slug/${slug}`);
   return response.data;
 };

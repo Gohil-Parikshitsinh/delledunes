@@ -16,6 +16,7 @@ import orderRouter from "./routes/orderRoute.js";
 import paymentRouter from "./routes/paymentRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import cartRouter from "./routes/cartRoute.js";
+import uploadRouter from "./routes/uploadRouter.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -53,7 +54,7 @@ app.use('/api/cart',cartRouter)
 app.use('/api/orders',orderRouter)
 app.use('/api/payment', paymentRouter)
 app.use('/api/admin', adminRouter)
-
+app.use('/api/upload', uploadRouter)
 
 app.listen(port,()=>{
     console.log(`server is running on http://localhost:${port}`);  

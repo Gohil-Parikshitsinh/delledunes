@@ -9,7 +9,6 @@ export const getAllProduct = async (req, res) => {
       .select("name slug offerPrice basePrice images isFeatured category")
       .populate("category", "name slug");
 
-    // Fetch all variants and group by product ID
     const variants = await ProductVariant.find().select("product size stock skuCode");
 
     const productsWithVariants = products.map((product) => {
@@ -47,7 +46,6 @@ export const getProductBySlug = async (req, res) => {
       });
     }
 
-    // Fetch variants for this specific product
     const variants = await ProductVariant.find({ product: product._id })
       .select("size stock skuCode");
 
@@ -85,10 +83,13 @@ export const getAllProductAdmin = async (req, res) => {
   }
 };
 
+// ── GET BY ID — for admin edit page ──────────────────────────────────────────
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findOne({ id }).populate("category");
+
+    const product = await Product.findById(id) // fixed: was findOne({ id })
+      .populate("category", "name slug");
 
     if (!product) {
       return res.status(404).json({
@@ -97,9 +98,15 @@ export const getProductById = async (req, res) => {
       });
     }
 
+    const variants = await ProductVariant.find({ product: id })
+      .select("size stock skuCode");
+
+    const productObj = product.toObject();
+    productObj.variants = variants;
+
     return res.status(200).json({
       success: true,
-      data: product,
+      data: productObj,
     });
   } catch (error) {
     return res.status(500).json({
@@ -131,20 +138,21 @@ export const createProduct = async (req, res) => {
       !basePrice ||
       !offerPrice ||
       !costPrice ||
-      !images ||!Array.isArray(images) || images.length === 0
+      !images ||
+      !Array.isArray(images) ||
+      images.length === 0
     ) {
       return res.status(400).json({
         success: false,
-        message: "All required field are must be provided",
+        message: "All required fields must be provided",
       });
     }
 
-    const catgeoryExists = await Category.findById(category);
-
-    if (!catgeoryExists) {
+    const categoryExists = await Category.findById(category);
+    if (!categoryExists) {
       return res.status(400).json({
         success: false,
-        message: "Category does not exists",
+        message: "Category does not exist",
       });
     }
 
@@ -154,7 +162,7 @@ export const createProduct = async (req, res) => {
     if (existingProduct) {
       return res.status(409).json({
         success: false,
-        message: "Product already exists",
+        message: "Product with this name already exists",
       });
     }
 
@@ -164,15 +172,14 @@ export const createProduct = async (req, res) => {
       description,
       brand,
       category,
-      basePrice,
-      offerPrice,
-      costPrice,
+      basePrice: Number(basePrice),
+      offerPrice: Number(offerPrice),
+      costPrice: Number(costPrice),
       images,
-      isFeatured,
+      isFeatured: isFeatured || false,
     });
 
-    
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "Product created successfully",
       data: product,
@@ -189,45 +196,52 @@ export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findById(id)
-
+    const product = await Product.findById(id);
     if (!product) {
-        return res.status(400).json({
-            success: false,
-            message: "Product not found",
-        });
-    }
-    const prodName = req.body.name
-    if (prodName && prodName === product.name) {
-        const slug = slugify(prodName,{lower:true, strict:true})
-        
-        const existingProduct = await Product.findOne({
-            _id:{$ne:id},
-            slug,
-        })
-        
-        if (existingProduct) {
-            return res.status(409).json({
-                success: false,
-                message: "Another product with same name already exists",
-            });
-        }
-        
-        req.body.slug = slug;
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
-    const updateProd = await Product.findByIdAndUpdate(
-        id,
-        req.body,
-        {new:true}
-    ).populate("category","name slug")
+    const prodName = req.body.name;
 
-    return res.status(200).json({
-        success: true,
-        message:"Product updated successfully",
-        data: updateProd,
+    // Fixed: was === (only regenerating slug when name UNCHANGED)
+    // Now correctly regenerates slug when name HAS changed
+    if (prodName && prodName !== product.name) {
+      const slug = slugify(prodName, { lower: true, strict: true });
+
+      const existingProduct = await Product.findOne({
+        _id: { $ne: id },
+        slug,
       });
 
+      if (existingProduct) {
+        return res.status(409).json({
+          success: false,
+          message: "Another product with the same name already exists",
+        });
+      }
+
+      req.body.slug = slug;
+    }
+
+    // Ensure prices are numbers
+    if (req.body.basePrice) req.body.basePrice = Number(req.body.basePrice);
+    if (req.body.offerPrice) req.body.offerPrice = Number(req.body.offerPrice);
+    if (req.body.costPrice) req.body.costPrice = Number(req.body.costPrice);
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true }
+    ).populate("category", "name slug");
+
+    return res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      data: updatedProduct,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -241,7 +255,6 @@ export const deleteProduct = async (req, res) => {
     const { id } = req.params;
 
     const product = await Product.findByIdAndDelete(id);
-
     if (!product) {
       return res.status(404).json({
         success: false,
@@ -251,7 +264,7 @@ export const deleteProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Product delete successfully",
+      message: "Product deleted successfully",
     });
   } catch (error) {
     return res.status(500).json({

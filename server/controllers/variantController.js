@@ -7,11 +7,11 @@ export const getAllVariants = async (req, res) => {
       .populate("product", "name slug")
       .sort({ createdAt: -1 });
 
-      return res.status(200).json({
-        success: true,
-        count: variants.length,
-        data: variants
-      })
+    return res.status(200).json({
+      success: true,
+      count: variants.length,
+      data: variants,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -20,45 +20,59 @@ export const getAllVariants = async (req, res) => {
   }
 };
 
+const generateSKU = (categorySlug, size) => {
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `DD-${categorySlug.toUpperCase()}-${size}-${random}`;
+};
+
 export const createVariant = async (req, res) => {
   try {
-    const {product, skuCode, size, stock} = req.body;
-    if (!product || !skuCode || !size) {
-        return res.status(400).json({
-            success: false,
-            message: "Product, SKU Code and Size are required",
-          });
+    const { product, size, stock } = req.body;
+
+    if (!product && !size) {
+      return res.status(400).json({
+        success: false,
+        message: "Product and Size are required",
+      });
     }
 
-    const productExist = await Product.findById(product)
-    if (!productExist) {
-        return res.status(400).json({
-            success: false,
-            message: "invalid Produc ID",
-          });
+    const productExists = await Product.findById(product).populate("category", "slug");
+    if (!productExists) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Product ID",
+      });
     }
 
-    const existingSKU = await ProductVariant.findOne({skuCode})
-    if (existingSKU) {
-        return res.status(500).json({
-            success: false,
-            message: "SKU alrady exists",
-          });
+    // Check if size already exists for this product
+    const sizeExists = await ProductVariant.findOne({ product, size: size.toUpperCase() });
+    if (sizeExists) {
+      return res.status(409).json({
+        success: false,
+        message: `Size ${size.toUpperCase()} already exists for this product`,
+      });
     }
 
-    const sizeUpper = size.toUpperCase();
+    // Auto-generate unique SKU
+    let skuCode;
+    let skuExists = true;
+    while (skuExists) {
+      skuCode = generateSKU(productExists.category?.slug || "DD", size.toUpperCase());
+      skuExists = await ProductVariant.findOne({ skuCode });
+    }
+
     const variant = await ProductVariant.create({
-        product,
-        skuCode,
-        size: sizeUpper,
-        stock: stock||0
-    })
+      product,
+      skuCode,
+      size: size.toUpperCase(),
+      stock: stock || 0,
+    });
 
     return res.status(201).json({
-        success: true,
-        message: "Variant created successfully",
-        data: variant
-      });
+      success: true,
+      message: "Variant created successfully",
+      data: variant,
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -68,60 +82,43 @@ export const createVariant = async (req, res) => {
 };
 
 export const updateVariant = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { product, skuCode, size, stock } = req.body;
-  
-      const variant = await ProductVariant.findById(id);
-      if (!variant) {
-        return res.status(404).json({
-          success: false,
-          message: "Variant not found",
-        });
-      }
-  
-      // If SKU is being changed → check duplicate
-      if (skuCode && skuCode !== variant.skuCode) {
-        const existingSKU = await ProductVariant.findOne({ skuCode });
-        if (existingSKU) {
-          return res.status(409).json({
-            success: false,
-            message: "SKU already exists",
-          });
-        }
-      }
-  
-      // If product is being changed → validate product exists
-      if (product) {
-        const productExist = await Product.findById(product);
-        if (!productExist) {
-          return res.status(400).json({
-            success: false,
-            message: "Invalid product ID",
-          });
-        }
-      }
-  
-      const updatedVariant = await ProductVariant.findByIdAndUpdate(
-        id,
-        req.body,
-        { new: true }
-      ).populate("product", "name slug");
-  
-      return res.status(200).json({
-        success: true,
-        message: "Variant updated successfully",
-        data: updatedVariant,
-      });
-  
-    } catch (error) {
-      return res.status(500).json({
+  try {
+    const { id } = req.params;
+    const { stock } = req.body;
+
+    const variant = await ProductVariant.findById(id);
+    if (!variant) {
+      return res.status(404).json({
         success: false,
-        message: error.message,
+        message: "Variant not found",
       });
     }
-  };
-  
+
+    if (stock !== undefined && stock < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Stock cannot be negative",
+      });
+    }
+
+    const updatedVariant = await ProductVariant.findByIdAndUpdate(
+      id,
+      { stock: Number(stock) },
+      { new: true }
+    ).populate("product", "name slug");
+
+    return res.status(200).json({
+      success: true,
+      message: "Variant updated successfully",
+      data: updatedVariant,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const deleteVariant = async (req, res) => {
   try {

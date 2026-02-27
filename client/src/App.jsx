@@ -20,6 +20,8 @@ import AdminOrders from "./pages/Admin/Orders/index.jsx";
 import Inventory from "./pages/Admin/Inventory/index.jsx";
 import Customers from "./pages/Admin/Customers/index.jsx";
 import Reports from "./pages/Admin/Reports/index.jsx";
+import CreateProduct from "./pages/Admin/Products/Create.jsx";
+import EditProduct from "./pages/Admin/Products/Edit.jsx";
 
 const App = () => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="products/create" element={<CreateProduct />} />
+          <Route path="products/edit/:id" element={<EditProduct />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="customers" element={<Customers />} />
