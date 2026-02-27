@@ -29,41 +29,40 @@ export const getLowStockProducts = async () => {
 
 // ── REPORTS ───────────────────────────────────────────────────────────────────
 
-// GET /api/admin/reports
-export const getReports = async () => {
-  const response = await axiosInstance.get("/api/admin/reports");
+export const getRevenueAnalytics = async (startDate = "", endDate = "") => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const response = await axiosInstance.get(`/api/admin/analytics/revenue?${params}`);
   return response.data;
 };
 
-// GET /api/admin/reports/sales
-export const getSalesReports = async () => {
-  const response = await axiosInstance.get("/api/admin/reports/sales");
+export const getMonthlyRevenue = async (year) => {
+  const response = await axiosInstance.get(`/api/admin/analytics/monthly?year=${year}`);
   return response.data;
 };
 
-// GET /api/admin/reports/users
-export const getUserReports = async () => {
-  const response = await axiosInstance.get("/api/admin/reports/users");
+export const getSalesReports = async (startDate = "", endDate = "") => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const response = await axiosInstance.get(`/api/admin/reports/sales?${params}`);
   return response.data;
 };
 
-// GET /api/admin/reports/products
-export const getTopProducts = async () => {
-  const response = await axiosInstance.get("/api/admin/reports/products");
+export const getUserReports = async (startDate = "", endDate = "") => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const response = await axiosInstance.get(`/api/admin/reports/users?${params}`);
   return response.data;
 };
 
-// ── ANALYTICS ─────────────────────────────────────────────────────────────────
-
-// GET /api/admin/analytics/revenue
-export const getRevenueAnalytics = async () => {
-  const response = await axiosInstance.get("/api/admin/analytics/revenue");
-  return response.data;
-};
-
-// GET /api/admin/analytics/monthly
-export const getMonthlyRevenue = async () => {
-  const response = await axiosInstance.get("/api/admin/analytics/monthly");
+export const getTopProducts = async (startDate = "", endDate = "") => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const response = await axiosInstance.get(`/api/admin/reports/products?${params}`);
   return response.data;
 };
 
