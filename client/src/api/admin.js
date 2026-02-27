@@ -104,7 +104,6 @@ export const getAllUsers = async () => {
 // GET /api/users/:id
 export const getUserById = async (id) => {
   const response = await axiosInstance.get(`/api/users/${id}`);
-  console.log(response);
   return response.data;
 };
 
