@@ -25,6 +25,8 @@ import EditProduct from "./pages/Admin/Products/Edit.jsx";
 import AdminCategories from "./pages/Admin/Categories/index.jsx";
 import AdminInventory from "./pages/Admin/Inventory/index.jsx";
 import AdminReports from "./pages/Admin/Reports/index.jsx";
+import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation.jsx";
+import NotFound from "./components/layout/NotFound.jsx";
 
 const App = () => {
   return (
@@ -44,6 +46,7 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/addresses" element={<AddressesPage />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
         </Route>
       </Route>
 
@@ -63,6 +66,7 @@ const App = () => {
       </Route>
 
       {/* ── FALLBACK ──────────────────────────────────────────── */}
+      <Route path="*" element={<NotFound />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
