@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../hooks/useCart.js";
-// import useAuth from "../../hooks/useAuth.js";
 import { getAddresses, createAddress } from "../../api/address.js";
 import { createOrder } from "../../api/orders.js";
 import { applyCoupon } from "../../api/coupons.js";
+import axiosInstance from "../../api/axiosInstance.js";
 
 const SHIPPING_FEE = 199;
 const FREE_SHIPPING_THRESHOLD = 2999;
@@ -94,18 +94,30 @@ const styles = `
 `;
 
 const EMPTY_ADDR = {
-  firstName: "", lastName: "", email: "",
-  street: "", city: "", state: "",
-  zipcode: "", country: "India", phone: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  street: "",
+  city: "",
+  state: "",
+  zipcode: "",
+  country: "India",
+  phone: "",
 };
 
 function SectionTitle({ children }) {
   return (
-    <p style={{
-      fontFamily: "DM Sans,sans-serif", fontSize: 11, fontWeight: 700,
-      letterSpacing: "0.14em", textTransform: "uppercase",
-      color: "#1A1A1A", margin: "0 0 14px",
-    }}>
+    <p
+      style={{
+        fontFamily: "DM Sans,sans-serif",
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        color: "#1A1A1A",
+        margin: "0 0 14px",
+      }}
+    >
       {children}
     </p>
   );
@@ -120,10 +132,21 @@ function FormInput({ label, ...props }) {
   );
 }
 
+// Load Razorpay script dynamically
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, cartTotal, clearCart } = useCart();
-  // const { user } = useAuth();
 
   // Addresses
   const [addresses, setAddresses] = useState([]);
@@ -137,7 +160,7 @@ export default function Checkout() {
   // Coupon
   const [couponInput, setCouponInput] = useState("");
   const [couponApplying, setCouponApplying] = useState(false);
-  const [couponData, setCouponData] = useState(null); // { code, discountAmount, discountType }
+  const [couponData, setCouponData] = useState(null);
   const [couponError, setCouponError] = useState("");
   const [couponSuccess, setCouponSuccess] = useState("");
 
@@ -145,7 +168,7 @@ export default function Checkout() {
   const [placing, setPlacing] = useState(false);
   const [orderError, setOrderError] = useState("");
 
-  // ── Fetch addresses ───────────────────────────────────────────────────────
+  // Fetch addresses
   useEffect(() => {
     getAddresses()
       .then((res) => {
@@ -158,26 +181,46 @@ export default function Checkout() {
       .finally(() => setAddrLoading(false));
   }, []);
 
-  // ── Redirect if cart empty ────────────────────────────────────────────────
+  // Redirect if cart empty
   useEffect(() => {
     if (!addrLoading && items.length === 0) {
       navigate("/cart");
     }
   }, [items, addrLoading]);
 
-  // ── Pricing ───────────────────────────────────────────────────────────────
+  // Pricing
   const shipping = cartTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const discountAmount = couponData?.discountAmount || 0;
   const total = Math.max(cartTotal + shipping - discountAmount, 0);
 
-  // ── Address form ──────────────────────────────────────────────────────────
+  // Address form
   const handleAddrChange = (e) => {
     setAddrForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
   const handleSaveAddress = async () => {
-    const { firstName, lastName, email, street, city, state, zipcode, country, phone } = addrForm;
-    if (!firstName || !lastName || !email || !street || !city || !state || !zipcode|| !country || !phone) {
+    const {
+      firstName,
+      lastName,
+      email,
+      street,
+      city,
+      state,
+      zipcode,
+      country,
+      phone,
+    } = addrForm;
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !street ||
+      !city ||
+      !state ||
+      !zipcode ||
+      !country ||
+      !phone
+    ) {
       setAddrError("All fields are required");
       return;
     }
@@ -197,7 +240,7 @@ export default function Checkout() {
     }
   };
 
-  // ── Coupon ────────────────────────────────────────────────────────────────
+  // Coupon
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) return;
     try {
@@ -223,25 +266,88 @@ export default function Checkout() {
     setCouponSuccess("");
   };
 
-  // ── Place order ───────────────────────────────────────────────────────────
+  // ── Place order with Razorpay ─────────────────────────────────────────────
   const handlePlaceOrder = async () => {
     if (!selectedAddr) {
       setOrderError("Please select a shipping address");
       return;
     }
+
     try {
       setPlacing(true);
       setOrderError("");
-      const res = await createOrder({
+
+      // 1. Load Razorpay script
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        setOrderError("Failed to load payment gateway. Please try again.");
+        setPlacing(false);
+        return;
+      }
+
+      // 2. Create Razorpay order on backend
+      const { data } = await axiosInstance.post("/api/payment/create-order", {
         shippingAddress: selectedAddr,
         couponCode: couponData?.code || undefined,
       });
-      const order = res.data;
-      await clearCart();
-      navigate(`/order-confirmation?orderId=${order._id}`);
+
+      if (!data.success) {
+        setOrderError(data.message || "Failed to create payment order");
+        setPlacing(false);
+        return;
+      }
+
+      const { razorpayOrderId, amount, currency, keyId } = data.data;
+
+      // 3. Open Razorpay modal
+      const options = {
+        key: keyId,
+        amount: amount * 100,
+        currency,
+        name: "Delle Dunes",
+        description: "Order Payment",
+        order_id: razorpayOrderId,
+        theme: { color: "#1A1A1A" },
+        modal: {
+          ondismiss: () => {
+            setOrderError("Payment cancelled. Please try again.");
+            setPlacing(false);
+          },
+        },
+        handler: async (response) => {
+          try {
+            // 4. Verify payment + create order in DB
+            const verifyRes = await axiosInstance.post("/api/payment/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              shippingAddress: selectedAddr,
+              couponCode: couponData?.code || undefined,
+            });
+
+            if (verifyRes.data.success) {
+              const order = verifyRes.data.data;
+              await clearCart();
+              navigate(`/order-confirmation?orderId=${order._id}`);
+            } else {
+              setOrderError(
+                verifyRes.data.message || "Payment verification failed"
+              );
+              setPlacing(false);
+            }
+          } catch (err) {
+            setOrderError(
+              err?.response?.data?.message || "Payment verification failed"
+            );
+            setPlacing(false);
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
     } catch (err) {
-      setOrderError(err?.response?.data?.message || "Failed to place order");
-    } finally {
+      setOrderError(err?.response?.data?.message || "Something went wrong");
       setPlacing(false);
     }
   };
@@ -249,80 +355,159 @@ export default function Checkout() {
   return (
     <>
       <style>{styles}</style>
-      <div style={{
-        minHeight: "100vh", background: "#F5F4F0",
-        fontFamily: "DM Sans,sans-serif", padding: "48px 24px 80px",
-      }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#F5F4F0",
+          fontFamily: "DM Sans,sans-serif",
+          padding: "48px 24px 80px",
+        }}
+      >
         <div style={{ maxWidth: 1040, margin: "0 auto" }}>
-
-          {/* Page title */}
-          <h1 style={{
-            fontFamily: "Bebas Neue,sans-serif", fontSize: 36,
-            letterSpacing: "0.04em", color: "#1A1A1A",
-            margin: "0 0 32px",
-          }}>
+          <h1
+            style={{
+              fontFamily: "Bebas Neue,sans-serif",
+              fontSize: 36,
+              letterSpacing: "0.04em",
+              color: "#1A1A1A",
+              margin: "0 0 32px",
+            }}
+          >
             Checkout
           </h1>
 
-          <div className="checkout-grid fade-in" style={{ display: "flex", gap: 32, alignItems: "flex-start" }}>
-
+          <div
+            className="checkout-grid fade-in"
+            style={{ display: "flex", gap: 32, alignItems: "flex-start" }}
+          >
             {/* ── LEFT — Address ── */}
             <div style={{ flex: 1, minWidth: 0 }}>
-
-              {/* Address list */}
-              <div style={{
-                background: "#fff", border: "1px solid #E0DED8",
-                borderRadius: 2, marginBottom: 16, overflow: "hidden",
-              }}>
-                <div style={{ padding: "16px 20px", borderBottom: "2px solid #F0EFEB" }}>
+              <div
+                style={{
+                  background: "#fff",
+                  border: "1px solid #E0DED8",
+                  borderRadius: 2,
+                  marginBottom: 16,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px 20px",
+                    borderBottom: "2px solid #F0EFEB",
+                  }}
+                >
                   <SectionTitle>Shipping Address</SectionTitle>
                 </div>
 
                 <div style={{ padding: "16px 20px" }}>
                   {addrLoading && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
                       {[1, 2].map((i) => (
-                        <div key={i} className="skeleton" style={{ height: 80 }} />
+                        <div
+                          key={i}
+                          className="skeleton"
+                          style={{ height: 80 }}
+                        />
                       ))}
                     </div>
                   )}
 
                   {!addrLoading && addresses.length > 0 && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: showAddrForm ? 16 : 0 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                        marginBottom: showAddrForm ? 16 : 0,
+                      }}
+                    >
                       {addresses.map((addr) => (
                         <div
                           key={addr._id}
-                          className={`addr-card${selectedAddr === addr._id ? " selected" : ""}`}
+                          className={`addr-card${
+                            selectedAddr === addr._id ? " selected" : ""
+                          }`}
                           onClick={() => {
                             setSelectedAddr(addr._id);
                             setShowAddrForm(false);
                           }}
                         >
-                          <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                            {/* Radio */}
-                            <div style={{
-                              width: 16, height: 16, borderRadius: "50%", flexShrink: 0, marginTop: 2,
-                              border: `2px solid ${selectedAddr === addr._id ? "#1A1A1A" : "#E0DED8"}`,
-                              background: selectedAddr === addr._id ? "#1A1A1A" : "transparent",
-                              position: "relative",
-                            }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "flex-start",
+                              gap: 10,
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 16,
+                                height: 16,
+                                borderRadius: "50%",
+                                flexShrink: 0,
+                                marginTop: 2,
+                                border: `2px solid ${
+                                  selectedAddr === addr._id
+                                    ? "#1A1A1A"
+                                    : "#E0DED8"
+                                }`,
+                                background:
+                                  selectedAddr === addr._id
+                                    ? "#1A1A1A"
+                                    : "transparent",
+                                position: "relative",
+                              }}
+                            >
                               {selectedAddr === addr._id && (
-                                <div style={{
-                                  width: 6, height: 6, borderRadius: "50%",
-                                  background: "#F5F4F0",
-                                  position: "absolute", top: "50%", left: "50%",
-                                  transform: "translate(-50%, -50%)",
-                                }} />
+                                <div
+                                  style={{
+                                    width: 6,
+                                    height: 6,
+                                    borderRadius: "50%",
+                                    background: "#F5F4F0",
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                  }}
+                                />
                               )}
                             </div>
                             <div>
-                              <p style={{ fontWeight: 600, fontSize: 13, color: "#1A1A1A", margin: "0 0 2px" }}>
+                              <p
+                                style={{
+                                  fontWeight: 600,
+                                  fontSize: 13,
+                                  color: "#1A1A1A",
+                                  margin: "0 0 2px",
+                                }}
+                              >
                                 {addr.firstName} {addr.lastName}
                               </p>
-                              <p style={{ fontSize: 12, color: "#6B6B6B", margin: "0 0 2px" }}>
-                                {addr.street}, {addr.city}, {addr.state} — {addr.zipcode}
+                              <p
+                                style={{
+                                  fontSize: 12,
+                                  color: "#6B6B6B",
+                                  margin: "0 0 2px",
+                                }}
+                              >
+                                {addr.street}, {addr.city}, {addr.state} —{" "}
+                                {addr.zipcode}
                               </p>
-                              <p style={{ fontSize: 12, color: "#9A9A9A", margin: 0 }}>
+                              <p
+                                style={{
+                                  fontSize: 12,
+                                  color: "#9A9A9A",
+                                  margin: 0,
+                                }}
+                              >
                                 {addr.country} · {addr.phone}
                               </p>
                             </div>
@@ -332,7 +517,6 @@ export default function Checkout() {
                     </div>
                   )}
 
-                  {/* Add new address toggle */}
                   {!addrLoading && !showAddrForm && (
                     <button
                       className="btn-ghost"
@@ -343,51 +527,135 @@ export default function Checkout() {
                     </button>
                   )}
 
-                  {/* Address form */}
                   {showAddrForm && (
                     <div style={{ marginTop: 16 }}>
-                      <p style={{
-                        fontFamily: "DM Sans,sans-serif", fontSize: 11, fontWeight: 700,
-                        letterSpacing: "0.14em", textTransform: "uppercase",
-                        color: "#9A9A9A", margin: "0 0 14px",
-                      }}>
+                      <p
+                        style={{
+                          fontFamily: "DM Sans,sans-serif",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          letterSpacing: "0.14em",
+                          textTransform: "uppercase",
+                          color: "#9A9A9A",
+                          margin: "0 0 14px",
+                        }}
+                      >
                         New Address
                       </p>
 
                       {addrError && (
-                        <div style={{
-                          background: "#FFF5F5", border: "1px solid #E53E3E",
-                          borderRadius: 2, padding: "10px 14px", color: "#E53E3E",
-                          fontSize: 13, marginBottom: 14,
-                        }}>
+                        <div
+                          style={{
+                            background: "#FFF5F5",
+                            border: "1px solid #E53E3E",
+                            borderRadius: 2,
+                            padding: "10px 14px",
+                            color: "#E53E3E",
+                            fontSize: 13,
+                            marginBottom: 14,
+                          }}
+                        >
                           {addrError}
                         </div>
                       )}
 
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                        <FormInput label="First Name" name="firstName" value={addrForm.firstName} onChange={handleAddrChange} placeholder="Jane" />
-                        <FormInput label="Last Name"  name="lastName"  value={addrForm.lastName}  onChange={handleAddrChange} placeholder="Smith" />
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 12,
+                        }}
+                      >
+                        <FormInput
+                          label="First Name"
+                          name="firstName"
+                          value={addrForm.firstName}
+                          onChange={handleAddrChange}
+                          placeholder="Jane"
+                        />
+                        <FormInput
+                          label="Last Name"
+                          name="lastName"
+                          value={addrForm.lastName}
+                          onChange={handleAddrChange}
+                          placeholder="Smith"
+                        />
                         <div style={{ gridColumn: "1 / -1" }}>
-                          <FormInput label="Email" name="email" type="email" value={addrForm.email} onChange={handleAddrChange} placeholder="jane@example.com" />
+                          <FormInput
+                            label="Email"
+                            name="email"
+                            type="email"
+                            value={addrForm.email}
+                            onChange={handleAddrChange}
+                            placeholder="jane@example.com"
+                          />
                         </div>
                         <div style={{ gridColumn: "1 / -1" }}>
-                          <FormInput label="Street Address" name="street" value={addrForm.street} onChange={handleAddrChange} placeholder="456 Oak St" />
+                          <FormInput
+                            label="Street Address"
+                            name="street"
+                            value={addrForm.street}
+                            onChange={handleAddrChange}
+                            placeholder="456 Oak St"
+                          />
                         </div>
-                        <FormInput label="City"    name="city"    value={addrForm.city}    onChange={handleAddrChange} placeholder="Mumbai" />
-                        <FormInput label="State"   name="state"   value={addrForm.state}   onChange={handleAddrChange} placeholder="Maharashtra" />
-                        <FormInput label="Zipcode" name="zipcode" type="number" value={addrForm.zipcode} onChange={handleAddrChange} placeholder="400001" />
-                        <FormInput label="Country" name="country" value={addrForm.country} onChange={handleAddrChange} placeholder="India" />
+                        <FormInput
+                          label="City"
+                          name="city"
+                          value={addrForm.city}
+                          onChange={handleAddrChange}
+                          placeholder="Mumbai"
+                        />
+                        <FormInput
+                          label="State"
+                          name="state"
+                          value={addrForm.state}
+                          onChange={handleAddrChange}
+                          placeholder="Maharashtra"
+                        />
+                        <FormInput
+                          label="Zipcode"
+                          name="zipcode"
+                          type="number"
+                          value={addrForm.zipcode}
+                          onChange={handleAddrChange}
+                          placeholder="400001"
+                        />
+                        <FormInput
+                          label="Country"
+                          name="country"
+                          value={addrForm.country}
+                          onChange={handleAddrChange}
+                          placeholder="India"
+                        />
                         <div style={{ gridColumn: "1 / -1" }}>
-                          <FormInput label="Phone" name="phone" value={addrForm.phone} onChange={handleAddrChange} placeholder="+91 98765 43210" />
+                          <FormInput
+                            label="Phone"
+                            name="phone"
+                            value={addrForm.phone}
+                            onChange={handleAddrChange}
+                            placeholder="+91 98765 43210"
+                          />
                         </div>
                       </div>
 
                       <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-                        <button className="btn-primary" style={{ width: "auto", padding: "10px 24px" }} onClick={handleSaveAddress} disabled={addrSaving}>
+                        <button
+                          className="btn-primary"
+                          style={{ width: "auto", padding: "10px 24px" }}
+                          onClick={handleSaveAddress}
+                          disabled={addrSaving}
+                        >
                           {addrSaving ? "Saving..." : "Save Address"}
                         </button>
                         {addresses.length > 0 && (
-                          <button className="btn-ghost" onClick={() => { setShowAddrForm(false); setAddrError(""); }}>
+                          <button
+                            className="btn-ghost"
+                            onClick={() => {
+                              setShowAddrForm(false);
+                              setAddrError("");
+                            }}
+                          >
                             Cancel
                           </button>
                         )}
@@ -397,31 +665,48 @@ export default function Checkout() {
                 </div>
               </div>
 
-              {/* Order error */}
               {orderError && (
-                <div style={{
-                  background: "#FFF5F5", border: "1px solid #E53E3E",
-                  borderRadius: 2, padding: "12px 16px", color: "#E53E3E",
-                  fontSize: 13, marginBottom: 16,
-                }}>
+                <div
+                  style={{
+                    background: "#FFF5F5",
+                    border: "1px solid #E53E3E",
+                    borderRadius: 2,
+                    padding: "12px 16px",
+                    color: "#E53E3E",
+                    fontSize: 13,
+                    marginBottom: 16,
+                  }}
+                >
                   {orderError}
                 </div>
               )}
-
-              {/* Place order button — visible on mobile below left col */}
-              <div style={{ display: "none" }} className="mobile-place-order" />
             </div>
 
             {/* ── RIGHT — Order Summary ── */}
-            <div className="checkout-right" style={{ width: 360, flexShrink: 0 }}>
-
+            <div
+              className="checkout-right"
+              style={{ width: 360, flexShrink: 0 }}
+            >
               {/* Items */}
-              <div style={{
-                background: "#fff", border: "1px solid #E0DED8",
-                borderRadius: 2, marginBottom: 16, overflow: "hidden",
-              }}>
-                <div style={{ padding: "16px 20px", borderBottom: "2px solid #F0EFEB" }}>
-                  <SectionTitle>Order Summary ({items.length} item{items.length !== 1 ? "s" : ""})</SectionTitle>
+              <div
+                style={{
+                  background: "#fff",
+                  border: "1px solid #E0DED8",
+                  borderRadius: 2,
+                  marginBottom: 16,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "16px 20px",
+                    borderBottom: "2px solid #F0EFEB",
+                  }}
+                >
+                  <SectionTitle>
+                    Order Summary ({items.length} item
+                    {items.length !== 1 ? "s" : ""})
+                  </SectionTitle>
                 </div>
 
                 {items.map((item, i) => {
@@ -431,39 +716,75 @@ export default function Checkout() {
                   const size = item.variant?.size || item.size || "—";
 
                   return (
-                    <div key={i} style={{
-                      display: "flex", gap: 12, padding: "14px 20px",
-                      borderBottom: i < items.length - 1 ? "1px solid #F8F8F7" : "none",
-                      alignItems: "center",
-                    }}>
+                    <div
+                      key={i}
+                      style={{
+                        display: "flex",
+                        gap: 12,
+                        padding: "14px 20px",
+                        borderBottom:
+                          i < items.length - 1 ? "1px solid #F8F8F7" : "none",
+                        alignItems: "center",
+                      }}
+                    >
                       {image ? (
-                        <img src={image} alt={name} style={{
-                          width: 48, height: 64, objectFit: "cover",
-                          borderRadius: 2, flexShrink: 0, border: "1px solid #E0DED8",
-                        }} />
+                        <img
+                          src={image}
+                          alt={name}
+                          style={{
+                            width: 48,
+                            height: 64,
+                            objectFit: "cover",
+                            borderRadius: 2,
+                            flexShrink: 0,
+                            border: "1px solid #E0DED8",
+                          }}
+                        />
                       ) : (
-                        <div style={{
-                          width: 48, height: 64, background: "#F0EFEB",
-                          borderRadius: 2, flexShrink: 0,
-                        }} />
+                        <div
+                          style={{
+                            width: 48,
+                            height: 64,
+                            background: "#F0EFEB",
+                            borderRadius: 2,
+                            flexShrink: 0,
+                          }}
+                        />
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{
-                          fontWeight: 600, fontSize: 13, color: "#1A1A1A",
-                          margin: "0 0 3px", overflow: "hidden",
-                          textOverflow: "ellipsis", whiteSpace: "nowrap",
-                        }}>
+                        <p
+                          style={{
+                            fontWeight: 600,
+                            fontSize: 13,
+                            color: "#1A1A1A",
+                            margin: "0 0 3px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
                           {name}
                         </p>
-                        <p style={{ fontSize: 12, color: "#9A9A9A", margin: "0 0 2px" }}>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            color: "#9A9A9A",
+                            margin: "0 0 2px",
+                          }}
+                        >
                           Size: {size} · Qty: {item.quantity}
                         </p>
                       </div>
-                      <p style={{
-                        fontFamily: "Bebas Neue,sans-serif", fontSize: 15,
-                        letterSpacing: "0.04em", color: "#1A1A1A",
-                        margin: 0, flexShrink: 0,
-                      }}>
+                      <p
+                        style={{
+                          fontFamily: "Bebas Neue,sans-serif",
+                          fontSize: 15,
+                          letterSpacing: "0.04em",
+                          color: "#1A1A1A",
+                          margin: 0,
+                          flexShrink: 0,
+                        }}
+                      >
                         ₹{(price * item.quantity).toLocaleString("en-IN")}
                       </p>
                     </div>
@@ -472,20 +793,28 @@ export default function Checkout() {
               </div>
 
               {/* Coupon */}
-              <div style={{
-                background: "#fff", border: "1px solid #E0DED8",
-                borderRadius: 2, padding: "16px 20px", marginBottom: 16,
-              }}>
+              <div
+                style={{
+                  background: "#fff",
+                  border: "1px solid #E0DED8",
+                  borderRadius: 2,
+                  padding: "16px 20px",
+                  marginBottom: 16,
+                }}
+              >
                 <SectionTitle>Coupon Code</SectionTitle>
-
                 {!couponData ? (
                   <>
                     <div style={{ display: "flex", gap: 8 }}>
                       <input
                         className="coupon-input"
                         value={couponInput}
-                        onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                        onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
+                        onChange={(e) =>
+                          setCouponInput(e.target.value.toUpperCase())
+                        }
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && handleApplyCoupon()
+                        }
                         placeholder="Enter coupon code"
                         disabled={couponApplying}
                       />
@@ -498,40 +827,63 @@ export default function Checkout() {
                       </button>
                     </div>
                     {couponError && (
-                      <p style={{
-                        fontFamily: "DM Sans,sans-serif", fontSize: 12,
-                        color: "#E53E3E", margin: "8px 0 0",
-                      }}>
+                      <p
+                        style={{
+                          fontFamily: "DM Sans,sans-serif",
+                          fontSize: 12,
+                          color: "#E53E3E",
+                          margin: "8px 0 0",
+                        }}
+                      >
                         {couponError}
                       </p>
                     )}
                   </>
                 ) : (
-                  <div style={{
-                    display: "flex", alignItems: "center",
-                    justifyContent: "space-between",
-                    background: "#F0FFF4", border: "1px solid #276749",
-                    borderRadius: 2, padding: "10px 14px",
-                  }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      background: "#F0FFF4",
+                      border: "1px solid #276749",
+                      borderRadius: 2,
+                      padding: "10px 14px",
+                    }}
+                  >
                     <div>
-                      <p style={{
-                        fontFamily: "Bebas Neue,sans-serif", fontSize: 14,
-                        letterSpacing: "0.06em", color: "#276749", margin: "0 0 2px",
-                      }}>
+                      <p
+                        style={{
+                          fontFamily: "Bebas Neue,sans-serif",
+                          fontSize: 14,
+                          letterSpacing: "0.06em",
+                          color: "#276749",
+                          margin: "0 0 2px",
+                        }}
+                      >
                         {couponData.code}
                       </p>
-                      <p style={{
-                        fontFamily: "DM Sans,sans-serif", fontSize: 12,
-                        color: "#276749", margin: 0,
-                      }}>
+                      <p
+                        style={{
+                          fontFamily: "DM Sans,sans-serif",
+                          fontSize: 12,
+                          color: "#276749",
+                          margin: 0,
+                        }}
+                      >
                         {couponSuccess}
                       </p>
                     </div>
                     <button
                       onClick={handleRemoveCoupon}
                       style={{
-                        background: "none", border: "none", cursor: "pointer",
-                        color: "#276749", fontSize: 18, lineHeight: 1, padding: 0,
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        color: "#276749",
+                        fontSize: 18,
+                        lineHeight: 1,
+                        padding: 0,
                       }}
                     >
                       ×
@@ -541,96 +893,150 @@ export default function Checkout() {
               </div>
 
               {/* Price breakdown */}
-              <div style={{
-                background: "#fff", border: "1px solid #E0DED8",
-                borderRadius: 2, overflow: "hidden", marginBottom: 16,
-              }}>
-                <div style={{ padding: "14px 20px", borderBottom: "1px solid #F0EFEB" }}>
+              <div
+                style={{
+                  background: "#fff",
+                  border: "1px solid #E0DED8",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  marginBottom: 16,
+                }}
+              >
+                <div
+                  style={{
+                    padding: "14px 20px",
+                    borderBottom: "1px solid #F0EFEB",
+                  }}
+                >
                   {[
-                    { label: "Subtotal", value: `₹${cartTotal.toLocaleString("en-IN")}` },
+                    {
+                      label: "Subtotal",
+                      value: `₹${cartTotal.toLocaleString("en-IN")}`,
+                    },
                     {
                       label: "Shipping",
                       value: shipping === 0 ? "Free" : `₹${shipping}`,
-                      sub: shipping > 0
-                        ? `Free above ₹${FREE_SHIPPING_THRESHOLD.toLocaleString("en-IN")}`
-                        : null,
+                      sub:
+                        shipping > 0
+                          ? `Free above ₹${FREE_SHIPPING_THRESHOLD.toLocaleString(
+                              "en-IN"
+                            )}`
+                          : null,
                     },
                     ...(couponData
-                      ? [{
-                          label: `Discount (${couponData.code})`,
-                          value: `− ₹${discountAmount.toLocaleString("en-IN")}`,
-                          green: true,
-                        }]
+                      ? [
+                          {
+                            label: `Discount (${couponData.code})`,
+                            value: `− ₹${discountAmount.toLocaleString(
+                              "en-IN"
+                            )}`,
+                            green: true,
+                          },
+                        ]
                       : []),
                   ].map((row) => (
-                    <div key={row.label} style={{
-                      display: "flex", justifyContent: "space-between",
-                      alignItems: "flex-start", marginBottom: 10,
-                    }}>
+                    <div
+                      key={row.label}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        marginBottom: 10,
+                      }}
+                    >
                       <div>
-                        <span style={{
-                          fontFamily: "DM Sans,sans-serif", fontSize: 13,
-                          color: row.green ? "#276749" : "#6B6B6B",
-                        }}>
+                        <span
+                          style={{
+                            fontFamily: "DM Sans,sans-serif",
+                            fontSize: 13,
+                            color: row.green ? "#276749" : "#6B6B6B",
+                          }}
+                        >
                           {row.label}
                         </span>
                         {row.sub && (
-                          <p style={{
-                            fontFamily: "DM Sans,sans-serif", fontSize: 11,
-                            color: "#9A9A9A", margin: "2px 0 0",
-                          }}>
+                          <p
+                            style={{
+                              fontFamily: "DM Sans,sans-serif",
+                              fontSize: 11,
+                              color: "#9A9A9A",
+                              margin: "2px 0 0",
+                            }}
+                          >
                             {row.sub}
                           </p>
                         )}
                       </div>
-                      <span style={{
-                        fontFamily: "DM Sans,sans-serif", fontSize: 13,
-                        color: row.green ? "#276749" : "#6B6B6B",
-                        fontWeight: row.green ? 700 : 400,
-                      }}>
+                      <span
+                        style={{
+                          fontFamily: "DM Sans,sans-serif",
+                          fontSize: 13,
+                          color: row.green ? "#276749" : "#6B6B6B",
+                          fontWeight: row.green ? 700 : 400,
+                        }}
+                      >
                         {row.value}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                {/* Total */}
-                <div style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  padding: "14px 20px",
-                }}>
-                  <span style={{
-                    fontFamily: "DM Sans,sans-serif", fontSize: 11, fontWeight: 700,
-                    letterSpacing: "0.14em", textTransform: "uppercase", color: "#1A1A1A",
-                  }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "14px 20px",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "DM Sans,sans-serif",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: "0.14em",
+                      textTransform: "uppercase",
+                      color: "#1A1A1A",
+                    }}
+                  >
                     Total
                   </span>
-                  <span style={{
-                    fontFamily: "Bebas Neue,sans-serif", fontSize: 26,
-                    letterSpacing: "0.04em", color: "#1A1A1A",
-                  }}>
+                  <span
+                    style={{
+                      fontFamily: "Bebas Neue,sans-serif",
+                      fontSize: 26,
+                      letterSpacing: "0.04em",
+                      color: "#1A1A1A",
+                    }}
+                  >
                     ₹{total.toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>
 
-              {/* Place order */}
+              {/* Place Order */}
               <button
                 className="btn-primary"
                 onClick={handlePlaceOrder}
                 disabled={placing || !selectedAddr || items.length === 0}
               >
-                {placing ? "Placing Order..." : "Place Order"}
+                {placing
+                  ? "Processing..."
+                  : `Pay ₹${total.toLocaleString("en-IN")}`}
               </button>
 
-              <p style={{
-                fontFamily: "DM Sans,sans-serif", fontSize: 11,
-                color: "#9A9A9A", textAlign: "center", margin: "12px 0 0",
-              }}>
-                By placing your order you agree to our terms and conditions.
+              <p
+                style={{
+                  fontFamily: "DM Sans,sans-serif",
+                  fontSize: 11,
+                  color: "#9A9A9A",
+                  textAlign: "center",
+                  margin: "12px 0 0",
+                }}
+              >
+                Secured by Razorpay. Your payment info is never stored.
               </p>
             </div>
-
           </div>
         </div>
       </div>
