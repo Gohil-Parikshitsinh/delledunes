@@ -27,7 +27,7 @@ dotenv.config()
 await connectDB()
 await connectCloudinary()
 
-const allowedOrigins = ['http://localhost:5173']
+const allowedOrigins = ['http://localhost:5173','https://delledunes.vercel.app']
 
 app.use(express.json());
 app.use(cookieParser());
