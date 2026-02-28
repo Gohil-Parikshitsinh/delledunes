@@ -17,6 +17,7 @@ import paymentRouter from "./routes/paymentRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import uploadRouter from "./routes/uploadRouter.js";
+import couponRouter from "./routes/couponRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -52,6 +53,7 @@ app.use('/api/variants',variantRouter)
 app.use('/api/address',addressRouter)
 app.use('/api/cart',cartRouter)
 app.use('/api/orders',orderRouter)
+app.use('/api/coupons', couponRouter);
 app.use('/api/payment', paymentRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/upload', uploadRouter)

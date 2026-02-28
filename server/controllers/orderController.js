@@ -3,11 +3,11 @@ import Cart from "../models/Cart.js";
 import ProductVariant from "../models/ProductVariant.js";
 import Address from "../models/Address.js";
 import Product from "../models/Product.js";
-
+import Coupon from "../models/Coupon.js";
 
 export const createOrder = async (req, res) => {
   try {
-    const { shippingAddress } = req.body;
+    const { shippingAddress, couponCode } = req.body;
 
     if (!shippingAddress) {
       return res.status(400).json({
@@ -29,7 +29,6 @@ export const createOrder = async (req, res) => {
     }
 
     const cart = await Cart.findOne({ userId: req.userId });
-
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
         success: false,
@@ -37,50 +36,141 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    let totalAmount = 0;
+    let subtotal = 0;
     let totalCost = 0;
     const orderItems = [];
 
     for (const item of cart.items) {
-        const variant = await ProductVariant.findById(item.variant);
-        const product = await Product.findById(item.product);
-      
-        if (!variant || !product) {
-          return res.status(400).json({
-            success: false,
-            message: "Product or variant not found",
-          });
-        }
-      
-        if (variant.stock < item.quantity) {
-          return res.status(400).json({
-            success: false,
-            message: "Some items are out of stock",
-          });
-        }
-      
-        // Deduct stock
-        variant.stock -= item.quantity;
-        await variant.save();
-      
-        totalAmount += item.priceSnapshot * item.quantity;
-        totalCost += product.costPrice * item.quantity;
-      
-        orderItems.push({
-          product: item.product,
-          variant: item.variant,
-          quantity: item.quantity,
-          priceAtPurchase: item.priceSnapshot,
-          costAtPurchase: product.costPrice,
+      const variant = await ProductVariant.findById(item.variant);
+      const product = await Product.findById(item.product);
+
+      if (!variant || !product) {
+        return res.status(400).json({
+          success: false,
+          message: "Product or variant not found",
         });
       }
-      
+
+      if (variant.stock < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: "Some items are out of stock",
+        });
+      }
+
+      variant.stock -= item.quantity;
+      await variant.save();
+
+      subtotal += item.priceSnapshot * item.quantity;
+      totalCost += product.costPrice * item.quantity;
+
+      orderItems.push({
+        product: item.product,
+        variant: item.variant,
+        quantity: item.quantity,
+        priceAtPurchase: item.priceSnapshot,
+        costAtPurchase: product.costPrice,
+      });
+    }
+
+    // ── Coupon logic ──────────────────────────────────────────────────────────
+    let discountAmount = 0;
+    let appliedCouponCode = null;
+    const SHIPPING_COST = 199;
+    const shipping = subtotal >= 2999 ? 0 : SHIPPING_COST;
+
+    if (couponCode) {
+      const coupon = await Coupon.findOne({
+        code: couponCode.toUpperCase().trim(),
+      });
+
+      if (!coupon || !coupon.isActive) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid or inactive coupon code",
+        });
+      }
+
+      const now = new Date();
+
+      if (coupon.startDate && new Date(coupon.startDate) > now) {
+        return res.status(400).json({
+          success: false,
+          message: "This coupon is not valid yet",
+        });
+      }
+
+      if (coupon.expiryDate && new Date(coupon.expiryDate) < now) {
+        return res.status(400).json({
+          success: false,
+          message: "This coupon has expired",
+        });
+      }
+
+      if (coupon.usageLimit !== null && coupon.usageCount >= coupon.usageLimit) {
+        return res.status(400).json({
+          success: false,
+          message: "This coupon has reached its usage limit",
+        });
+      }
+
+      const userUsage = coupon.usedBy.find(
+        (u) => u.userId.toString() === req.userId
+      );
+      if (userUsage && userUsage.usedCount >= coupon.perUserLimit) {
+        return res.status(400).json({
+          success: false,
+          message: "You have exceeded the usage limit for this coupon",
+        });
+      }
+
+      if (coupon.isFirstOrderOnly) {
+        const previousOrders = await Order.countDocuments({ user: req.userId });
+        if (previousOrders > 0) {
+          return res.status(400).json({
+            success: false,
+            message: "This coupon is only valid for first-time orders",
+          });
+        }
+      }
+
+      if (subtotal < coupon.minOrderAmount) {
+        return res.status(400).json({
+          success: false,
+          message: `Minimum order amount of ₹${coupon.minOrderAmount} required`,
+        });
+      }
+
+      if (coupon.discountType === "percentage") {
+        discountAmount = Math.round((subtotal * coupon.discountValue) / 100);
+      } else if (coupon.discountType === "fixed") {
+        discountAmount = Math.min(coupon.discountValue, subtotal);
+      } else if (coupon.discountType === "freeshipping") {
+        discountAmount = shipping;
+      }
+
+      appliedCouponCode = coupon.code;
+
+      // Update usage
+      coupon.usageCount += 1;
+      if (userUsage) {
+        userUsage.usedCount += 1;
+      } else {
+        coupon.usedBy.push({ userId: req.userId, usedCount: 1 });
+      }
+      await coupon.save();
+    }
+
+    const shipping_fee = subtotal >= 2999 ? 0 : SHIPPING_COST;
+    const totalAmount = subtotal + shipping_fee - discountAmount;
 
     const order = await Order.create({
       user: req.userId,
       items: orderItems,
-      totalAmount,
+      totalAmount: Math.max(totalAmount, 0),
       totalCost,
+      couponCode: appliedCouponCode,
+      discountAmount,
       shippingAddress,
     });
 
@@ -100,6 +190,7 @@ export const createOrder = async (req, res) => {
     });
   }
 };
+
 
 export const getOrdersByUser = async (req, res) => {
   try {

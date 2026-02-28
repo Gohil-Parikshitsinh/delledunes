@@ -41,6 +41,14 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    couponCode: {
+      type: String,
+      default: null,
+    },
+    discountAmount: {
+      type: Number,
+      default: 0,
+    },
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
@@ -53,7 +61,7 @@ const orderSchema = new mongoose.Schema(
     },
     shippingAddress: {
       type: mongoose.Schema.Types.ObjectId,
-      require: true,
+      required: true,
       ref: "address",
     },
   },
