@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "./AuthContext.js";
 import { loginUser, logoutUser, registerUser, getMe } from "../api/auth.js";
+import PageLoader from "../components/layout/PageLoader.jsx";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -58,7 +59,7 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{ user, loading, isAuthenticated, isAdmin, login, logout, register }}
     >
-      {!loading && children}
+      {loading ? <PageLoader /> : children}
     </AuthContext.Provider>
   );
 };

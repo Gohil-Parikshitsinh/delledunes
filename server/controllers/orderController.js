@@ -228,7 +228,7 @@ export const getOrderById = async (req, res) => {
       });
     }
 
-    if (order.user.toString() !== req.userId && req.role !== "admin") {
+    if (order.user._id.toString() !== req.userId && req.role !== "admin") {
       return res.status(403).json({
         success: false,
         message: "Not authorized",

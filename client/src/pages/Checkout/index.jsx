@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../hooks/useCart.js";
 import { getAddresses, createAddress } from "../../api/address.js";
-import { createOrder } from "../../api/orders.js";
+// import { createOrder } from "../../api/orders.js";
 import { applyCoupon } from "../../api/coupons.js";
 import axiosInstance from "../../api/axiosInstance.js";
 
@@ -146,7 +146,7 @@ const loadRazorpayScript = () => {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, cartTotal, clearCart } = useCart();
+  const { items, cartTotal, loading: cartLoading } = useCart();
 
   // Addresses
   const [addresses, setAddresses] = useState([]);
@@ -183,10 +183,11 @@ export default function Checkout() {
 
   // Redirect if cart empty
   useEffect(() => {
-    if (!addrLoading && items.length === 0) {
+    if (!addrLoading && !cartLoading && items.length === 0) {
       navigate("/cart");
     }
-  }, [items, addrLoading]);
+  }, [items, addrLoading, cartLoading]);
+  
 
   // Pricing
   const shipping = cartTotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
@@ -324,11 +325,9 @@ export default function Checkout() {
               shippingAddress: selectedAddr,
               couponCode: couponData?.code || undefined,
             });
-
             if (verifyRes.data.success) {
               const order = verifyRes.data.data;
-              await clearCart();
-              navigate(`/order-confirmation?orderId=${order._id}`);
+              window.location.href = `/order-confirmation?orderId=${order._id}`;
             } else {
               setOrderError(
                 verifyRes.data.message || "Payment verification failed"
