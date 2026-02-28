@@ -27,6 +27,7 @@ import AdminInventory from "./pages/Admin/Inventory/index.jsx";
 import AdminReports from "./pages/Admin/Reports/index.jsx";
 import OrderConfirmation from "./pages/OrderConfirmation/OrderConfirmation.jsx";
 import NotFound from "./components/layout/NotFound.jsx";
+import Coupons from "./pages/Admin/Coupons/Coupons.jsx";
 
 const App = () => {
   return (
@@ -62,6 +63,7 @@ const App = () => {
           <Route path="inventory" element={<AdminInventory />} />
           <Route path="customers" element={<AdminCustomers />} />
           <Route path="reports" element={<AdminReports />} />
+          <Route path="coupons" element={<Coupons />} />
         </Route>
       </Route>
 

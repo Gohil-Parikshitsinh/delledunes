@@ -80,6 +80,22 @@ const NAV_ITEMS = [
           </svg>
         ),
       },
+      {
+        label: "Coupon",
+        to: "/admin/coupons",
+        icon: (
+          <svg
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
+          >
+            <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8" />
+          </svg>
+        ),
+      },
     ],
   },
   {

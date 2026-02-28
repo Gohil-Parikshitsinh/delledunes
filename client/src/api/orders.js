@@ -1,10 +1,10 @@
 import axiosInstance from "./axiosInstance.js";
 
 // POST /api/orders
-export const createOrder = async ({ items, shippingAddressId }) => {
+export const createOrder = async ({ shippingAddress, couponCode }) => {
   const response = await axiosInstance.post("/api/orders", {
-    items,
-    shippingAddressId,
+    shippingAddress,
+    couponCode: couponCode || undefined,
   });
   return response.data;
 };
@@ -23,14 +23,14 @@ export const getOrderById = async (id) => {
 
 // ── ADMIN ─────────────────────────────────────────────────────────────────────
 
-// GET /api/orders
+// GET /api/orders/all
 export const getAllOrders = async () => {
   const response = await axiosInstance.get("/api/orders/all");
   return response.data;
 };
 
 // PUT /api/orders/:id/status
-export const updateOrderStatus = async (id,status) => {
+export const updateOrderStatus = async (id, status) => {
   const response = await axiosInstance.put(`/api/orders/${id}/status`, {
     status,
   });
