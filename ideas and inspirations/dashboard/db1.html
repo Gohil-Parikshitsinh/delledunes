@@ -1,0 +1,500 @@
+<iframe title="wireframe-79cAMwQ0Lo77SXca8K27" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;script&gt;
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      &lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot;&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Ecarto - Admin Dashboard&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        gray: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            300: '#d4d4d4',
+                            400: '#a3a3a3',
+                            500: '#737373',
+                            600: '#525252',
+                            700: '#404040',
+                            800: '#262626',
+                            900: '#171717',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    &lt;/script&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js&quot; crossorigin=&quot;anonymous&quot; referrerpolicy=&quot;no-referrer&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.plot.ly/plotly-3.1.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .sidebar-item-active {
+            color: #0ea5e9;
+        }
+        .sidebar-item:hover:not(.sidebar-item-active) {
+            color: #404040;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;text-gray-700 antialiased&quot;&gt;
+
+    &lt;!-- Mobile Header --&gt;
+    &lt;div class=&quot;lg:hidden flex items-center justify-between bg-white px-6 py-4 border-b border-gray-100 fixed top-0 w-full z-50&quot;&gt;
+        &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+            &lt;span class=&quot;font-semibold text-gray-900 text-lg&quot;&gt;Ecarto&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button id=&quot;mobile-menu-btn&quot; class=&quot;text-gray-500 hover:text-gray-900&quot;&gt;
+            &lt;i class=&quot;fa-solid fa-bars text-xl&quot;&gt;&lt;/i&gt;
+        &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;flex h-screen overflow-hidden pt-14 lg:pt-0&quot;&gt;
+        
+        &lt;!-- Sidebar --&gt;
+        &lt;aside id=&quot;sidebar&quot; class=&quot;fixed inset-y-0 left-0 z-40 w-60 bg-white border-r border-gray-100 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col h-full&quot;&gt;
+            &lt;!-- Logo Section --&gt;
+            &lt;div class=&quot;flex items-center px-6 py-8&quot;&gt;
+                &lt;span class=&quot;font-semibold text-gray-900 text-xl&quot;&gt;Ecarto&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Navigation --&gt;
+            &lt;nav class=&quot;flex-1 px-6 overflow-y-auto hide-scrollbar space-y-1&quot;&gt;
+                &lt;a href=&quot;#&quot; class=&quot;sidebar-item-active flex items-center gap-3 px-3 py-2.5 text-sm font-medium&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-grid-2 text-base&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;Dashboard&lt;/span&gt;
+                &lt;/a&gt;
+                
+                &lt;a href=&quot;#&quot; class=&quot;sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-box text-base&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;Products&lt;/span&gt;
+                &lt;/a&gt;
+                
+                &lt;a href=&quot;#&quot; class=&quot;sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-cart-flatbed text-base&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;Orders&lt;/span&gt;
+                &lt;/a&gt;
+                
+                &lt;a href=&quot;#&quot; class=&quot;sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-users text-base&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;Customers&lt;/span&gt;
+                &lt;/a&gt;
+                
+                &lt;a href=&quot;#&quot; class=&quot;sidebar-item flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-500&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-chart-pie text-base&quot;&gt;&lt;/i&gt;
+                    &lt;span&gt;Analytics&lt;/span&gt;
+                &lt;/a&gt;
+            &lt;/nav&gt;
+
+            &lt;!-- User Profile (Bottom) --&gt;
+            &lt;div class=&quot;p-6 border-t border-gray-100&quot;&gt;
+                &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                    &lt;img src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg&quot; alt=&quot;Admin&quot; class=&quot;w-9 h-9 rounded-full object-cover&quot;&gt;
+                    &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+                        &lt;p class=&quot;text-sm font-medium text-gray-900 truncate&quot;&gt;Marcus Orlando&lt;/p&gt;
+                        &lt;p class=&quot;text-xs text-gray-400 truncate&quot;&gt;Administrator&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/aside&gt;
+
+        &lt;!-- Main Content --&gt;
+        &lt;main class=&quot;flex-1 flex flex-col min-w-0 bg-white lg:ml-60 h-full overflow-y-auto&quot;&gt;
+            
+            &lt;!-- Top Navbar --&gt;
+            &lt;header class=&quot;bg-white sticky top-0 z-30 px-8 py-6 border-b border-gray-100&quot;&gt;
+                &lt;div class=&quot;flex justify-between items-center&quot;&gt;
+                    &lt;div class=&quot;relative flex-1 max-w-md&quot;&gt;
+                        &lt;span class=&quot;absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-magnifying-glass text-sm&quot;&gt;&lt;/i&gt;
+                        &lt;/span&gt;
+                        &lt;input type=&quot;text&quot; class=&quot;w-full py-2 pl-10 pr-4 text-sm text-gray-700 bg-gray-50 border-0 focus:outline-none focus:ring-1 focus:ring-gray-200&quot; placeholder=&quot;Search...&quot;&gt;
+                    &lt;/div&gt;
+                    
+                    &lt;div class=&quot;flex items-center gap-4&quot;&gt;
+                        &lt;button class=&quot;p-2 text-gray-400 hover:text-gray-900&quot;&gt;
+                            &lt;i class=&quot;fa-regular fa-bell text-lg&quot;&gt;&lt;/i&gt;
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/header&gt;
+
+            &lt;!-- Dashboard Content --&gt;
+            &lt;div class=&quot;px-8 py-8 space-y-12&quot;&gt;
+                
+                &lt;!-- Welcome Section --&gt;
+                &lt;section&gt;
+                    &lt;h1 class=&quot;text-3xl font-semibold text-gray-900 mb-1&quot;&gt;Dashboard&lt;/h1&gt;
+                    &lt;p class=&quot;text-gray-400&quot;&gt;Welcome back, Marcus&lt;/p&gt;
+                &lt;/section&gt;
+
+                &lt;!-- KPI Cards Grid --&gt;
+                &lt;section class=&quot;grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6&quot;&gt;
+                    &lt;!-- Card 1: Total Income --&gt;
+                    &lt;div class=&quot;border border-gray-100 p-6&quot;&gt;
+                        &lt;p class=&quot;text-xs font-medium text-gray-400 uppercase tracking-wider mb-3&quot;&gt;Total Income&lt;/p&gt;
+                        &lt;h3 class=&quot;text-3xl font-light text-gray-900&quot;&gt;$72,428&lt;/h3&gt;
+                        &lt;div class=&quot;mt-4&quot;&gt;
+                            &lt;span class=&quot;text-xs text-gray-400&quot;&gt;+10% from last month&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Card 2: Total Sale --&gt;
+                    &lt;div class=&quot;border border-gray-100 p-6&quot;&gt;
+                        &lt;p class=&quot;text-xs font-medium text-gray-400 uppercase tracking-wider mb-3&quot;&gt;Total Sale&lt;/p&gt;
+                        &lt;h3 class=&quot;text-3xl font-light text-gray-900&quot;&gt;24,210&lt;/h3&gt;
+                        &lt;div class=&quot;mt-4&quot;&gt;
+                            &lt;span class=&quot;text-xs text-gray-400&quot;&gt;+10% from last month&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Card 3: Total Profit --&gt;
+                    &lt;div class=&quot;border border-gray-100 p-6&quot;&gt;
+                        &lt;p class=&quot;text-xs font-medium text-gray-400 uppercase tracking-wider mb-3&quot;&gt;Total Profit&lt;/p&gt;
+                        &lt;h3 class=&quot;text-3xl font-light text-gray-900&quot;&gt;$46,787&lt;/h3&gt;
+                        &lt;div class=&quot;mt-4&quot;&gt;
+                            &lt;span class=&quot;text-xs text-gray-400&quot;&gt;+10% from last month&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Card 4: Client Growth --&gt;
+                    &lt;div class=&quot;border border-gray-100 p-6&quot;&gt;
+                        &lt;p class=&quot;text-xs font-medium text-gray-400 uppercase tracking-wider mb-3&quot;&gt;Client Growth&lt;/p&gt;
+                        &lt;h3 class=&quot;text-3xl font-light text-gray-900&quot;&gt;64%&lt;/h3&gt;
+                        &lt;div class=&quot;mt-4&quot;&gt;
+                            &lt;span class=&quot;text-xs text-gray-400&quot;&gt;Today growth&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/section&gt;
+
+                &lt;!-- Statistics Chart Section --&gt;
+                &lt;section class=&quot;grid grid-cols-1 lg:grid-cols-3 gap-6&quot;&gt;
+                    &lt;div class=&quot;lg:col-span-2 border border-gray-100 p-8&quot;&gt;
+                        &lt;div class=&quot;flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4&quot;&gt;
+                            &lt;div&gt;
+                                &lt;h3 class=&quot;text-lg font-medium text-gray-900&quot;&gt;Revenue&lt;/h3&gt;
+                                &lt;p class=&quot;text-sm text-gray-400 mt-1&quot;&gt;Income vs expenses&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;flex gap-1 border border-gray-100&quot;&gt;
+                                &lt;button class=&quot;px-4 py-2 text-xs font-medium bg-gray-900 text-white&quot;&gt;Monthly&lt;/button&gt;
+                                &lt;button class=&quot;px-4 py-2 text-xs font-medium text-gray-400 hover:text-gray-900&quot;&gt;Weekly&lt;/button&gt;
+                                &lt;button class=&quot;px-4 py-2 text-xs font-medium text-gray-400 hover:text-gray-900&quot;&gt;Daily&lt;/button&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;div class=&quot;flex items-center gap-12 mb-8&quot;&gt;
+                            &lt;div&gt;
+                                &lt;p class=&quot;text-xs text-gray-400 uppercase tracking-wider mb-2&quot;&gt;Income&lt;/p&gt;
+                                &lt;span class=&quot;text-2xl font-light text-gray-900&quot;&gt;$72,428&lt;/span&gt;
+                            &lt;/div&gt;
+                            &lt;div&gt;
+                                &lt;p class=&quot;text-xs text-gray-400 uppercase tracking-wider mb-2&quot;&gt;Expenses&lt;/p&gt;
+                                &lt;span class=&quot;text-2xl font-light text-gray-900&quot;&gt;$25,641&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;!-- Chart Container --&gt;
+                        &lt;div id=&quot;statisticsChart&quot; class=&quot;w-full h-[300px]&quot;&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Top Products --&gt;
+                    &lt;div class=&quot;lg:col-span-1 border border-gray-100 p-8 flex flex-col&quot;&gt;
+                        &lt;h3 class=&quot;text-lg font-medium text-gray-900 mb-6&quot;&gt;Top Products&lt;/h3&gt;
+                        
+                        &lt;div class=&quot;space-y-6 flex-1&quot;&gt;
+                            &lt;!-- Product Item 1 --&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                                &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+                                    &lt;h4 class=&quot;text-sm font-medium text-gray-900 truncate&quot;&gt;Apple AirPods Pro&lt;/h4&gt;
+                                    &lt;p class=&quot;text-xs text-gray-400 mt-1&quot;&gt;428 sales&lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;p class=&quot;text-sm font-medium text-gray-900 ml-4&quot;&gt;$249&lt;/p&gt;
+                            &lt;/div&gt;
+
+                            &lt;!-- Product Item 2 --&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                                &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+                                    &lt;h4 class=&quot;text-sm font-medium text-gray-900 truncate&quot;&gt;MacBook Air M2&lt;/h4&gt;
+                                    &lt;p class=&quot;text-xs text-gray-400 mt-1&quot;&gt;356 sales&lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;p class=&quot;text-sm font-medium text-gray-900 ml-4&quot;&gt;$1,199&lt;/p&gt;
+                            &lt;/div&gt;
+
+                            &lt;!-- Product Item 3 --&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                                &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+                                    &lt;h4 class=&quot;text-sm font-medium text-gray-900 truncate&quot;&gt;iPhone 15 Pro&lt;/h4&gt;
+                                    &lt;p class=&quot;text-xs text-gray-400 mt-1&quot;&gt;192 sales&lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;p class=&quot;text-sm font-medium text-gray-900 ml-4&quot;&gt;$999&lt;/p&gt;
+                            &lt;/div&gt;
+                            
+                            &lt;!-- Product Item 4 --&gt;
+                            &lt;div class=&quot;flex items-center justify-between&quot;&gt;
+                                &lt;div class=&quot;flex-1 min-w-0&quot;&gt;
+                                    &lt;h4 class=&quot;text-sm font-medium text-gray-900 truncate&quot;&gt;Sony WH-1000XM5&lt;/h4&gt;
+                                    &lt;p class=&quot;text-xs text-gray-400 mt-1&quot;&gt;145 sales&lt;/p&gt;
+                                &lt;/div&gt;
+                                &lt;p class=&quot;text-sm font-medium text-gray-900 ml-4&quot;&gt;$348&lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/section&gt;
+
+                &lt;!-- Latest Orders Table --&gt;
+                &lt;section class=&quot;border border-gray-100&quot;&gt;
+                    &lt;div class=&quot;p-8 border-b border-gray-100&quot;&gt;
+                        &lt;h3 class=&quot;text-lg font-medium text-gray-900&quot;&gt;Recent Orders&lt;/h3&gt;
+                    &lt;/div&gt;
+                    
+                    &lt;div class=&quot;overflow-x-auto&quot;&gt;
+                        &lt;table class=&quot;w-full text-left border-collapse&quot;&gt;
+                            &lt;thead&gt;
+                                &lt;tr class=&quot;border-b border-gray-100&quot;&gt;
+                                    &lt;th class=&quot;px-8 py-4 text-xs font-medium text-gray-400 uppercase tracking-wider&quot;&gt;Order ID&lt;/th&gt;
+                                    &lt;th class=&quot;px-8 py-4 text-xs font-medium text-gray-400 uppercase tracking-wider&quot;&gt;Customer&lt;/th&gt;
+                                    &lt;th class=&quot;px-8 py-4 text-xs font-medium text-gray-400 uppercase tracking-wider&quot;&gt;Amount&lt;/th&gt;
+                                    &lt;th class=&quot;px-8 py-4 text-xs font-medium text-gray-400 uppercase tracking-wider&quot;&gt;Status&lt;/th&gt;
+                                    &lt;th class=&quot;px-8 py-4 text-xs font-medium text-gray-400 uppercase tracking-wider&quot;&gt;Date&lt;/th&gt;
+                                &lt;/tr&gt;
+                            &lt;/thead&gt;
+                            &lt;tbody class=&quot;divide-y divide-gray-100&quot;&gt;
+                                &lt;!-- Row 1 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50&quot;&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;#EC4584555&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;p class=&quot;text-sm text-gray-900&quot;&gt;Jimmy Anderson&lt;/p&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;$174.00&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-xs text-gray-400&quot;&gt;Placed&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-400&quot;&gt;14 Jan 2025&lt;/span&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+
+                                &lt;!-- Row 2 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50&quot;&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;#EC4584556&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;p class=&quot;text-sm text-gray-900&quot;&gt;Sarah Williams&lt;/p&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;$2,450.00&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-xs text-gray-400&quot;&gt;Processing&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-400&quot;&gt;14 Jan 2025&lt;/span&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+
+                                &lt;!-- Row 3 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50&quot;&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;#EC4584557&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;p class=&quot;text-sm text-gray-900&quot;&gt;Michael Brown&lt;/p&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;$89.50&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-xs text-gray-400&quot;&gt;Shipped&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-400&quot;&gt;13 Jan 2025&lt;/span&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+
+                                &lt;!-- Row 4 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50&quot;&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;#EC4584558&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;p class=&quot;text-sm text-gray-900&quot;&gt;Emily Davis&lt;/p&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-900&quot;&gt;$450.00&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-xs text-gray-400&quot;&gt;Cancelled&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;px-8 py-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-400&quot;&gt;12 Jan 2025&lt;/span&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/tbody&gt;
+                        &lt;/table&gt;
+                    &lt;/div&gt;
+                &lt;/section&gt;
+            &lt;/div&gt;
+        &lt;/main&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        
+        mobileMenuBtn.addEventListener('click', () =&gt; {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        document.addEventListener('click', (e) =&gt; {
+            if (window.innerWidth &lt; 1024) {
+                if (!sidebar.contains(e.target) &amp;&amp; !mobileMenuBtn.contains(e.target) &amp;&amp; !sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.add('-translate-x-full');
+                }
+            }
+        });
+
+        // Initialize Plotly Chart
+        window.addEventListener('load', function() {
+            try {
+                const trace1 = {
+                    x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    y: [65000, 59000, 80000, 81000, 56000, 55000, 40000, 72428, 62000, 75000],
+                    name: 'Income',
+                    type: 'bar',
+                    marker: {
+                        color: '#171717',
+                        opacity: 1
+                    },
+                    width: 0.4
+                };
+
+                const trace2 = {
+                    x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    y: [25000, 20000, 30000, 28000, 22000, 20000, 18000, 25641, 23000, 27000],
+                    name: 'Expenses',
+                    type: 'bar',
+                    marker: {
+                        color: '#d4d4d4',
+                        opacity: 1
+                    },
+                    width: 0.4
+                };
+
+                const data = [trace1, trace2];
+
+                const layout = {
+                    barmode: 'group',
+                    bargap: 0.3,
+                    bargroupgap: 0.1,
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    margin: { t: 20, r: 10, b: 40, l: 60 },
+                    showlegend: false,
+                    xaxis: {
+                        tickfont: {
+                            family: 'Inter, sans-serif',
+                            size: 11,
+                            color: '#a3a3a3'
+                        },
+                        showgrid: false,
+                        showline: false
+                    },
+                    yaxis: {
+                        tickfont: {
+                            family: 'Inter, sans-serif',
+                            size: 11,
+                            color: '#a3a3a3'
+                        },
+                        showgrid: true,
+                        gridcolor: '#f5f5f5',
+                        showline: false,
+                        tickprefix: '$'
+                    }
+                };
+
+                const config = {
+                    responsive: true,
+                    displayModeBar: false,
+                    displaylogo: false
+                };
+
+                Plotly.newPlot('statisticsChart', data, layout, config);
+            } catch(e) {
+                console.error(&quot;Chart loading failed&quot;, e);
+                document.getElementById('statisticsChart').innerHTML = '&lt;div class=&quot;flex items-center justify-center h-full text-gray-400&quot;&gt;Chart loading error&lt;/div&gt;';
+            }
+        });
+    &lt;/script&gt;
+
+  &lt;script&gt;
+    (function() {
+      function blockEvent(e) {
+        if (!e) return false;
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+        return false;
+      }
+
+      // Block all anchor navigations (including http(s), mailto, tel, hash, fragments)
+      document.addEventListener('click', function(e) {
+        var a = e.target &amp;&amp; e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        return blockEvent(e);
+      }, true);
+
+      // Neutralize programmatic navigation attempts
+      try { window.open = function() { return null }; } catch (_) {}
+      try {
+        var noop = function(){};
+        history.pushState = noop;
+        history.replaceState = noop;
+      } catch (_) {}
+      try {
+        if (window.location) {
+          window.location.assign = function(){};
+          window.location.replace = function(){};
+        }
+      } catch (_) {}
+    })();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" frameborder="0" class="bg-white w-full h-full rounded-lg border-2 border-carbon-200" style="width: 1080px; height: 690px;"></iframe>

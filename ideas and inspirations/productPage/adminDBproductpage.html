@@ -1,0 +1,502 @@
+<iframe title="wireframe-oGAj9qhoLGmaFQ4e0qil" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;script&gt;
+        window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest'
+        };
+      &lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot;&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Product Management&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;script&gt;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#6B7280',
+                        accent: '#F3F4F6',
+                        bgMain: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'card': '12px',
+                    }
+                }
+            }
+        }
+    &lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style&gt;
+        ::-webkit-scrollbar { display: none; }
+        .custom-shadow { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); }
+        .input-focus:focus { outline: none; border-color: #000000; }
+        .transition-all-200 { transition: all 0.2s ease-in-out; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-white font-sans text-gray-900&quot;&gt;
+
+    &lt;div class=&quot;flex min-h-screen&quot;&gt;
+        &lt;!-- Sidebar --&gt;
+        &lt;aside id=&quot;sidebar&quot; class=&quot;hidden lg:flex flex-col w-64 bg-white border-r border-gray-200 p-6 fixed h-full&quot;&gt;
+            &lt;div class=&quot;flex items-center gap-3 mb-10 px-2&quot;&gt;
+                &lt;div class=&quot;w-8 h-8 bg-black rounded flex items-center justify-center text-white&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-bolt&quot;&gt;&lt;/i&gt;
+                &lt;/div&gt;
+                &lt;span class=&quot;text-xl font-bold tracking-tight&quot;&gt;Lumix&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;nav class=&quot;space-y-1&quot;&gt;
+                &lt;a href=&quot;#&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 text-gray-500 hover:bg-gray-50 rounded transition-all-200&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-chart-pie w-5&quot;&gt;&lt;/i&gt; Dashboard
+                &lt;/a&gt;
+                &lt;a href=&quot;#&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 bg-black text-white font-semibold rounded transition-all-200&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-box w-5&quot;&gt;&lt;/i&gt; Products
+                &lt;/a&gt;
+                &lt;a href=&quot;#&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 text-gray-500 hover:bg-gray-50 rounded transition-all-200&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-cart-shopping w-5&quot;&gt;&lt;/i&gt; Orders
+                &lt;/a&gt;
+                &lt;a href=&quot;#&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 text-gray-500 hover:bg-gray-50 rounded transition-all-200&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-users w-5&quot;&gt;&lt;/i&gt; Customers
+                &lt;/a&gt;
+                &lt;a href=&quot;#&quot; class=&quot;flex items-center gap-3 px-3 py-2.5 text-gray-500 hover:bg-gray-50 rounded transition-all-200&quot;&gt;
+                    &lt;i class=&quot;fa-solid fa-gear w-5&quot;&gt;&lt;/i&gt; Settings
+                &lt;/a&gt;
+            &lt;/nav&gt;
+            &lt;div class=&quot;mt-auto pt-6 border-t border-gray-200&quot;&gt;
+                &lt;div class=&quot;flex items-center gap-3 px-2&quot;&gt;
+                    &lt;img src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg&quot; class=&quot;w-10 h-10 rounded-full object-cover grayscale&quot; alt=&quot;User&quot;&gt;
+                    &lt;div&gt;
+                        &lt;p class=&quot;text-sm font-semibold&quot;&gt;Alex Rivera&lt;/p&gt;
+                        &lt;p class=&quot;text-xs text-gray-400&quot;&gt;Admin&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/aside&gt;
+
+        &lt;!-- Main Content --&gt;
+        &lt;main class=&quot;flex-1 lg:ml-64 p-4 md:p-8&quot;&gt;
+            
+            &lt;!-- Section 1: Header &amp; Stats --&gt;
+            &lt;header id=&quot;header&quot; class=&quot;mb-8&quot;&gt;
+                &lt;div class=&quot;flex flex-col md:flex-row md:items-center justify-between gap-4&quot;&gt;
+                    &lt;div&gt;
+                        &lt;h1 class=&quot;text-2xl font-bold text-black&quot;&gt;Products&lt;/h1&gt;
+                        &lt;p class=&quot;text-gray-500 text-sm&quot;&gt;Manage inventory&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                        &lt;button class=&quot;px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-all-200&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-file-export mr-2&quot;&gt;&lt;/i&gt; Export
+                        &lt;/button&gt;
+                        &lt;button onclick=&quot;toggleView('add-product')&quot; class=&quot;px-4 py-2 text-sm font-medium text-white bg-black rounded hover:bg-gray-800 transition-all-200&quot;&gt;
+                            &lt;i class=&quot;fa-solid fa-plus mr-2&quot;&gt;&lt;/i&gt; Add Product
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;grid grid-cols-1 md:grid-cols-3 gap-6 mt-8&quot;&gt;
+                    &lt;div class=&quot;bg-white p-5 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                        &lt;div class=&quot;flex items-center justify-between mb-2&quot;&gt;
+                            &lt;span class=&quot;text-gray-500 text-sm font-medium&quot;&gt;Total Products&lt;/span&gt;
+                            &lt;div class=&quot;w-8 h-8 bg-gray-100 text-black rounded flex items-center justify-center text-xs&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-boxes-stacked&quot;&gt;&lt;/i&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                            &lt;h3 class=&quot;text-2xl font-bold&quot;&gt;1,284&lt;/h3&gt;
+                            &lt;span class=&quot;text-xs font-semibold text-gray-500&quot;&gt;+12%&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;bg-white p-5 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                        &lt;div class=&quot;flex items-center justify-between mb-2&quot;&gt;
+                            &lt;span class=&quot;text-gray-500 text-sm font-medium&quot;&gt;Active&lt;/span&gt;
+                            &lt;div class=&quot;w-8 h-8 bg-gray-100 text-black rounded flex items-center justify-center text-xs&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-check-circle&quot;&gt;&lt;/i&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                            &lt;h3 class=&quot;text-2xl font-bold&quot;&gt;1,142&lt;/h3&gt;
+                            &lt;span class=&quot;text-xs font-semibold text-gray-500&quot;&gt;92%&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;bg-white p-5 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                        &lt;div class=&quot;flex items-center justify-between mb-2&quot;&gt;
+                            &lt;span class=&quot;text-gray-500 text-sm font-medium&quot;&gt;Low Stock&lt;/span&gt;
+                            &lt;div class=&quot;w-8 h-8 bg-gray-100 text-black rounded flex items-center justify-center text-xs&quot;&gt;
+                                &lt;i class=&quot;fa-solid fa-triangle-exclamation&quot;&gt;&lt;/i&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;flex items-baseline gap-2&quot;&gt;
+                            &lt;h3 class=&quot;text-2xl font-bold&quot;&gt;14&lt;/h3&gt;
+                            &lt;span class=&quot;text-xs font-semibold text-gray-500&quot;&gt;Alert&lt;/span&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/header&gt;
+
+            &lt;!-- Section 2: Product List View --&gt;
+            &lt;section id=&quot;list-view&quot; class=&quot;space-y-6&quot;&gt;
+                &lt;!-- Filters --&gt;
+                &lt;div class=&quot;bg-white p-4 rounded-card border border-gray-200 custom-shadow flex flex-wrap items-center gap-4&quot;&gt;
+                    &lt;div class=&quot;relative flex-1 min-w-[240px]&quot;&gt;
+                        &lt;i class=&quot;fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm&quot;&gt;&lt;/i&gt;
+                        &lt;input type=&quot;text&quot; placeholder=&quot;Search products...&quot; class=&quot;w-full pl-11 pr-4 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:border-black outline-none transition-all-200&quot;&gt;
+                    &lt;/div&gt;
+                    &lt;select class=&quot;px-4 py-2 bg-gray-50 border border-gray-200 rounded text-sm outline-none cursor-pointer focus:border-black transition-all-200&quot;&gt;
+                        &lt;option&gt;All Categories&lt;/option&gt;
+                        &lt;option&gt;Electronics&lt;/option&gt;
+                        &lt;option&gt;Fashion&lt;/option&gt;
+                    &lt;/select&gt;
+                    &lt;select class=&quot;px-4 py-2 bg-gray-50 border border-gray-200 rounded text-sm outline-none cursor-pointer focus:border-black transition-all-200&quot;&gt;
+                        &lt;option&gt;All Status&lt;/option&gt;
+                        &lt;option&gt;Active&lt;/option&gt;
+                        &lt;option&gt;Draft&lt;/option&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Table --&gt;
+                &lt;div class=&quot;bg-white rounded-card border border-gray-200 custom-shadow overflow-hidden&quot;&gt;
+                    &lt;div class=&quot;overflow-x-auto&quot;&gt;
+                        &lt;table class=&quot;w-full text-left&quot;&gt;
+                            &lt;thead&gt;
+                                &lt;tr class=&quot;bg-gray-50 border-b border-gray-200&quot;&gt;
+                                    &lt;th class=&quot;p-4 w-10&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;rounded border-gray-300&quot;&gt;&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;Product&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;SKU&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;Category&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;Price&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;Stock&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider&quot;&gt;Status&lt;/th&gt;
+                                    &lt;th class=&quot;p-4 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right&quot;&gt;Actions&lt;/th&gt;
+                                &lt;/tr&gt;
+                            &lt;/thead&gt;
+                            &lt;tbody class=&quot;divide-y divide-gray-100&quot;&gt;
+                                &lt;!-- Row 1 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50 transition-all-200 group&quot;&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;rounded border-gray-300&quot;&gt;&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                                            &lt;div class=&quot;h-12 w-12 rounded bg-gray-100 overflow-hidden flex-shrink-0&quot;&gt;
+                                                &lt;img class=&quot;w-full h-full object-cover grayscale&quot; src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/4d27eb517b-5c92b2145db8485a18d0.png&quot; alt=&quot;minimalist wireless headphones black professional&quot; /&gt;
+                                            &lt;/div&gt;
+                                            &lt;div&gt;
+                                                &lt;p class=&quot;text-sm font-semibold text-black&quot;&gt;Wireless Headphones&lt;/p&gt;
+                                                &lt;p class=&quot;text-xs text-gray-500&quot;&gt;2 days ago&lt;/p&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;WH-1000XM4&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;Electronics&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm font-semibold text-black&quot;&gt;$299.00&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-600&quot;&gt;45&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;px-2.5 py-1 rounded text-[11px] font-bold bg-black text-white uppercase tracking-wide&quot;&gt;Active&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-right&quot;&gt;
+                                        &lt;div class=&quot;flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity&quot;&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-pen-to-square&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;!-- Row 2 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50 transition-all-200 group&quot;&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;rounded border-gray-300&quot;&gt;&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                                            &lt;div class=&quot;h-12 w-12 rounded bg-gray-100 overflow-hidden flex-shrink-0&quot;&gt;
+                                                &lt;img class=&quot;w-full h-full object-cover grayscale&quot; src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/b61f92aba1-6c64bf8383887120e4a0.png&quot; alt=&quot;minimal ceramic vase white aesthetic&quot; /&gt;
+                                            &lt;/div&gt;
+                                            &lt;div&gt;
+                                                &lt;p class=&quot;text-sm font-semibold text-black&quot;&gt;Ceramic Vase&lt;/p&gt;
+                                                &lt;p class=&quot;text-xs text-gray-500&quot;&gt;1 week ago&lt;/p&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;VASE-01&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;Home&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm font-semibold text-black&quot;&gt;$45.00&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-600 font-medium&quot;&gt;4&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;px-2.5 py-1 rounded text-[11px] font-bold bg-gray-100 text-gray-700 uppercase tracking-wide&quot;&gt;Draft&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-right&quot;&gt;
+                                        &lt;div class=&quot;flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity&quot;&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-pen-to-square&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                                &lt;!-- Row 3 --&gt;
+                                &lt;tr class=&quot;hover:bg-gray-50 transition-all-200 group&quot;&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;&lt;input type=&quot;checkbox&quot; class=&quot;rounded border-gray-300&quot;&gt;&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;div class=&quot;flex items-center gap-3&quot;&gt;
+                                            &lt;div class=&quot;h-12 w-12 rounded bg-gray-100 overflow-hidden flex-shrink-0&quot;&gt;
+                                                &lt;img class=&quot;w-full h-full object-cover grayscale&quot; src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/30008493c4-646a4ab7591e2cde7296.png&quot; alt=&quot;leather smart watch strap brown luxury detail&quot; /&gt;
+                                            &lt;/div&gt;
+                                            &lt;div&gt;
+                                                &lt;p class=&quot;text-sm font-semibold text-black&quot;&gt;Leather Watch Strap&lt;/p&gt;
+                                                &lt;p class=&quot;text-xs text-gray-500&quot;&gt;3 days ago&lt;/p&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;STRAP-LTH-BR&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm text-gray-600&quot;&gt;Accessories&lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-sm font-semibold text-black&quot;&gt;$35.00&lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;text-sm text-gray-600&quot;&gt;120&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4&quot;&gt;
+                                        &lt;span class=&quot;px-2.5 py-1 rounded text-[11px] font-bold bg-gray-100 text-gray-700 uppercase tracking-wide&quot;&gt;Draft&lt;/span&gt;
+                                    &lt;/td&gt;
+                                    &lt;td class=&quot;p-4 text-right&quot;&gt;
+                                        &lt;div class=&quot;flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity&quot;&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-pen-to-square&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                            &lt;button class=&quot;p-2 text-gray-400 hover:text-black transition-colors&quot;&gt;&lt;i class=&quot;fa-solid fa-trash-can&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/div&gt;
+                                    &lt;/td&gt;
+                                &lt;/tr&gt;
+                            &lt;/tbody&gt;
+                        &lt;/table&gt;
+                    &lt;/div&gt;
+                    &lt;!-- Pagination --&gt;
+                    &lt;div class=&quot;p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between&quot;&gt;
+                        &lt;p class=&quot;text-xs text-gray-500&quot;&gt;Showing 1 to 10 of 1,284 entries&lt;/p&gt;
+                        &lt;div class=&quot;flex items-center gap-2&quot;&gt;
+                            &lt;button class=&quot;w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-white transition-all-200&quot;&gt;&lt;i class=&quot;fa-solid fa-chevron-left text-xs&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                            &lt;button class=&quot;w-8 h-8 flex items-center justify-center rounded bg-black text-white font-semibold text-xs transition-all-200&quot;&gt;1&lt;/button&gt;
+                            &lt;button class=&quot;w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-white transition-all-200 text-xs&quot;&gt;2&lt;/button&gt;
+                            &lt;button class=&quot;w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-white transition-all-200 text-xs&quot;&gt;3&lt;/button&gt;
+                            &lt;button class=&quot;w-8 h-8 flex items-center justify-center rounded border border-gray-200 text-gray-500 hover:bg-white transition-all-200&quot;&gt;&lt;i class=&quot;fa-solid fa-chevron-right text-xs&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/section&gt;
+
+            &lt;!-- Section 3: Add Product View (Hidden by default) --&gt;
+            &lt;section id=&quot;add-view&quot; class=&quot;hidden space-y-8 pb-20&quot;&gt;
+                &lt;div class=&quot;flex items-center gap-2 text-sm text-gray-500 mb-2&quot;&gt;
+                    &lt;span class=&quot;hover:text-black cursor-pointer&quot; onclick=&quot;toggleView('list')&quot;&gt;Products&lt;/span&gt;
+                    &lt;i class=&quot;fa-solid fa-chevron-right text-[10px]&quot;&gt;&lt;/i&gt;
+                    &lt;span class=&quot;text-black font-medium&quot;&gt;Add New Product&lt;/span&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;flex flex-col lg:flex-row gap-8&quot;&gt;
+                    &lt;!-- Left Column: Main Form --&gt;
+                    &lt;div class=&quot;flex-1 space-y-6&quot;&gt;
+                        &lt;!-- Basic Information --&gt;
+                        &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                            &lt;h2 class=&quot;text-lg font-bold mb-6&quot;&gt;Basic Information&lt;/h2&gt;
+                            &lt;div class=&quot;space-y-4&quot;&gt;
+                                &lt;div&gt;
+                                    &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Product Name&lt;/label&gt;
+                                    &lt;input type=&quot;text&quot; placeholder=&quot;e.g. Wireless Noise Cancelling Headphones&quot; class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200&quot;&gt;
+                                &lt;/div&gt;
+                                &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-4&quot;&gt;
+                                    &lt;div&gt;
+                                        &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Category&lt;/label&gt;
+                                        &lt;select class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200&quot;&gt;
+                                            &lt;option&gt;Select Category&lt;/option&gt;
+                                            &lt;option&gt;Electronics&lt;/option&gt;
+                                            &lt;option&gt;Fashion&lt;/option&gt;
+                                        &lt;/select&gt;
+                                    &lt;/div&gt;
+                                    &lt;div&gt;
+                                        &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Brand&lt;/label&gt;
+                                        &lt;select class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200&quot;&gt;
+                                            &lt;option&gt;Select Brand&lt;/option&gt;
+                                            &lt;option&gt;Sony&lt;/option&gt;
+                                            &lt;option&gt;Apple&lt;/option&gt;
+                                        &lt;/select&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Description&lt;/label&gt;
+                                    &lt;textarea rows=&quot;4&quot; placeholder=&quot;Enter detailed product description...&quot; class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200 resize-none&quot;&gt;&lt;/textarea&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;!-- Pricing &amp; Inventory --&gt;
+                        &lt;div class=&quot;grid grid-cols-1 md:grid-cols-2 gap-6&quot;&gt;
+                            &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                                &lt;h2 class=&quot;text-lg font-bold mb-6&quot;&gt;Pricing&lt;/h2&gt;
+                                &lt;div class=&quot;space-y-4&quot;&gt;
+                                    &lt;div class=&quot;grid grid-cols-2 gap-4&quot;&gt;
+                                        &lt;div&gt;
+                                            &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Regular Price&lt;/label&gt;
+                                            &lt;div class=&quot;relative&quot;&gt;
+                                                &lt;span class=&quot;absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm&quot;&gt;$&lt;/span&gt;
+                                                &lt;input type=&quot;number&quot; class=&quot;w-full pl-8 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm outline-none focus:border-black&quot;&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;
+                                        &lt;div&gt;
+                                            &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Sale Price&lt;/label&gt;
+                                            &lt;div class=&quot;relative&quot;&gt;
+                                                &lt;span class=&quot;absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm&quot;&gt;$&lt;/span&gt;
+                                                &lt;input type=&quot;number&quot; class=&quot;w-full pl-8 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm outline-none focus:border-black&quot;&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;
+                                    &lt;/div&gt;
+                                    &lt;div class=&quot;p-3 bg-gray-50 rounded text-center&quot;&gt;
+                                        &lt;span class=&quot;text-xs font-semibold text-gray-700&quot;&gt;Estimated Profit&lt;/span&gt;
+                                        &lt;span class=&quot;text-sm font-bold text-gray-700&quot;&gt;$124.50&lt;/span&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                                &lt;h2 class=&quot;text-lg font-bold mb-6&quot;&gt;Inventory&lt;/h2&gt;
+                                &lt;div class=&quot;space-y-4&quot;&gt;
+                                    &lt;div&gt;
+                                        &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;SKU&lt;/label&gt;
+                                        &lt;div class=&quot;flex gap-2&quot;&gt;
+                                            &lt;input type=&quot;text&quot; class=&quot;flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm outline-none focus:border-black&quot;&gt;
+                                            &lt;button class=&quot;px-3 py-2 bg-gray-100 text-gray-600 rounded hover:bg-gray-200 transition-all-200&quot;&gt;&lt;i class=&quot;fa-solid fa-rotate&quot;&gt;&lt;/i&gt;&lt;/button&gt;
+                                        &lt;/div&gt;
+                                    &lt;/div&gt;
+                                    &lt;div&gt;
+                                        &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Stock Quantity&lt;/label&gt;
+                                        &lt;input type=&quot;number&quot; class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm outline-none focus:border-black&quot;&gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;!-- Image Upload --&gt;
+                        &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                            &lt;div class=&quot;flex items-center justify-between mb-6&quot;&gt;
+                                &lt;h2 class=&quot;text-lg font-bold&quot;&gt;Product Images&lt;/h2&gt;
+                                &lt;button class=&quot;text-sm text-black font-semibold hover:underline&quot;&gt;Add via URL&lt;/button&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center hover:border-black hover:bg-gray-50 transition-all-200 cursor-pointer&quot;&gt;
+                                &lt;div class=&quot;w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4&quot;&gt;
+                                    &lt;i class=&quot;fa-solid fa-cloud-arrow-up text-2xl text-gray-400&quot;&gt;&lt;/i&gt;
+                                &lt;/div&gt;
+                                &lt;p class=&quot;text-sm font-semibold text-gray-700 mb-1&quot;&gt;Click to upload or drag and drop&lt;/p&gt;
+                                &lt;p class=&quot;text-xs text-gray-500&quot;&gt;PNG, JPG or WEBP (max. 5MB)&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;div class=&quot;grid grid-cols-4 gap-3 mt-4&quot;&gt;
+                                &lt;div class=&quot;relative group aspect-square bg-gray-100 rounded overflow-hidden&quot;&gt;
+                                    &lt;img src=&quot;https://storage.googleapis.com/uxpilot-auth.appspot.com/4d27eb517b-5c92b2145db8485a18d0.png&quot; class=&quot;w-full h-full object-cover&quot; alt=&quot;Product&quot;&gt;
+                                    &lt;button class=&quot;absolute top-2 right-2 w-6 h-6 bg-white rounded opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center&quot;&gt;
+                                        &lt;i class=&quot;fa-solid fa-times text-xs text-gray-600&quot;&gt;&lt;/i&gt;
+                                    &lt;/button&gt;
+                                    &lt;span class=&quot;absolute bottom-2 left-2 px-2 py-0.5 bg-black text-white text-[10px] font-bold rounded&quot;&gt;Primary&lt;/span&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+
+                        &lt;!-- SEO Section --&gt;
+                        &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow&quot;&gt;
+                            &lt;h2 class=&quot;text-lg font-bold mb-6&quot;&gt;SEO Settings&lt;/h2&gt;
+                            &lt;div class=&quot;space-y-4&quot;&gt;
+                                &lt;div&gt;
+                                    &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Meta Title&lt;/label&gt;
+                                    &lt;input type=&quot;text&quot; placeholder=&quot;Product title for search engines&quot; class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200&quot;&gt;
+                                &lt;/div&gt;
+                                &lt;div&gt;
+                                    &lt;label class=&quot;block text-sm font-medium text-gray-700 mb-1.5&quot;&gt;Meta Description&lt;/label&gt;
+                                    &lt;textarea rows=&quot;3&quot; placeholder=&quot;Brief description for search results&quot; class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-black/20 focus:border-black outline-none transition-all-200 resize-none&quot;&gt;&lt;/textarea&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Right Column: Sidebar --&gt;
+                    &lt;div class=&quot;lg:w-80 space-y-6&quot;&gt;
+                        &lt;!-- Status Card --&gt;
+                        &lt;div class=&quot;bg-white p-6 rounded-card border border-gray-200 custom-shadow sticky top-8&quot;&gt;
+                            &lt;h3 class=&quot;text-sm font-bold text-gray-700 mb-4&quot;&gt;Publish Status&lt;/h3&gt;
+                            &lt;div class=&quot;space-y-4&quot;&gt;
+                                &lt;div&gt;
+                                    &lt;label class=&quot;block text-xs font-medium text-gray-500 mb-2&quot;&gt;Status&lt;/label&gt;
+                                    &lt;select class=&quot;w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm outline-none focus:border-black&quot;&gt;
+                                        &lt;option&gt;Draft&lt;/option&gt;
+                                        &lt;option&gt;Active&lt;/option&gt;
+                                        &lt;option&gt;Out of Stock&lt;/option&gt;
+                                    &lt;/select&gt;
+                                &lt;/div&gt;
+                                &lt;div class=&quot;flex items-center justify-between py-3 border-t border-gray-100&quot;&gt;
+                                    &lt;span class=&quot;text-sm text-gray-600&quot;&gt;Track Inventory&lt;/span&gt;
+                                    &lt;label class=&quot;relative inline-flex items-center cursor-pointer&quot;&gt;
+                                        &lt;input type=&quot;checkbox&quot; class=&quot;sr-only peer&quot; checked&gt;
+                                        &lt;div class=&quot;w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black&quot;&gt;&lt;/div&gt;
+                                    &lt;/label&gt;
+                                &lt;/div&gt;
+                                &lt;div class=&quot;space-y-2 pt-4&quot;&gt;
+                                    &lt;button onclick=&quot;toggleView('list')&quot; class=&quot;w-full px-4 py-2.5 bg-black text-white font-semibold rounded hover:bg-gray-800 transition-all-200&quot;&gt;
+                                        &lt;i class=&quot;fa-solid fa-check mr-2&quot;&gt;&lt;/i&gt; Publish Product
+                                    &lt;/button&gt;
+                                    &lt;button class=&quot;w-full px-4 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded hover:bg-gray-200 transition-all-200&quot;&gt;
+                                        Save as Draft
+                                    &lt;/button&gt;
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/section&gt;
+
+        &lt;/main&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        function toggleView(view) {
+            const listView = document.getElementById('list-view');
+            const addView = document.getElementById('add-view');
+            
+            if (view === 'add-product') {
+                listView.classList.add('hidden');
+                addView.classList.remove('hidden');
+            } else {
+                listView.classList.remove('hidden');
+                addView.classList.add('hidden');
+            }
+        }
+    &lt;/script&gt;
+
+
+  &lt;script&gt;
+    (function() {
+      function blockEvent(e) {
+        if (!e) return false;
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+        return false;
+      }
+
+      // Block all anchor navigations (including http(s), mailto, tel, hash, fragments)
+      document.addEventListener('click', function(e) {
+        var a = e.target &amp;&amp; e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        return blockEvent(e);
+      }, true);
+
+      // Neutralize programmatic navigation attempts
+      try { window.open = function() { return null }; } catch (_) {}
+      try {
+        var noop = function(){};
+        history.pushState = noop;
+        history.replaceState = noop;
+      } catch (_) {}
+      try {
+        if (window.location) {
+          window.location.assign = function(){};
+          window.location.replace = function(){};
+        }
+      } catch (_) {}
+    })();
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" frameborder="0" class="bg-white w-full h-full rounded-lg border-2 border-carbon-200" style="width: 1080px; height: 690px;"></iframe>
